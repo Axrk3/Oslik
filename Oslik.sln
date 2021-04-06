@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Oslik", "Oslik\Oslik.vcxproj", "{01ABB7D7-A6BF-4CEF-A569-A4D03284C546}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01ABB7D7-A6BF-4CEF-A569-A4D03284C546}.Debug|x64.ActiveCfg = Debug|x64
+		{01ABB7D7-A6BF-4CEF-A569-A4D03284C546}.Debug|x64.Build.0 = Debug|x64
+		{01ABB7D7-A6BF-4CEF-A569-A4D03284C546}.Debug|x86.ActiveCfg = Debug|Win32
+		{01ABB7D7-A6BF-4CEF-A569-A4D03284C546}.Debug|x86.Build.0 = Debug|Win32
+		{01ABB7D7-A6BF-4CEF-A569-A4D03284C546}.Release|x64.ActiveCfg = Release|x64
+		{01ABB7D7-A6BF-4CEF-A569-A4D03284C546}.Release|x64.Build.0 = Release|x64
+		{01ABB7D7-A6BF-4CEF-A569-A4D03284C546}.Release|x86.ActiveCfg = Release|Win32
+		{01ABB7D7-A6BF-4CEF-A569-A4D03284C546}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {05407D2A-7475-42C7-951C-ED647BEE8186}
+	EndGlobalSection
+EndGlobal
