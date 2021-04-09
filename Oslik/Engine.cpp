@@ -68,7 +68,7 @@ void Engine::draw() {
 	window.setView(view);
 	lvl.draw(window, view);
 	window.draw(player.sprite);
-	// ������ ������� �������� ������� ����� ���������� ��������
+	// Vmesto playera budet vivod animacii
 	//player.animation.draw(window, 200, 400);
 	window.display();
 }

@@ -43,6 +43,7 @@ void Player::jump() {
 
 void Player::run() {
 	if (!running) dx *= 1.5;
+	running = true;
 }
 
 void Player::stopRun() {

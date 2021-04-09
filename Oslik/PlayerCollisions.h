@@ -7,7 +7,7 @@ void collisionX(int** map,FloatRect &hitBox, int &dx, int blockSize) {
 	for (int i = hitBox.top / blockSize; i < (hitBox.top + hitBox.height) / blockSize; i++) {
 		for (int j = hitBox.left / blockSize; j < (hitBox.left + hitBox.width) / blockSize; j++) {
 			if (map[i][j] == 0) continue;
-			// �������� ������� ���������� � ��� �� ������ ����� �� �������
+			// От какого-то до такого-то будут физичные блоки
 			if ((map[i][j] > 0) && (map[i][j] <= 24)) {
 
 				if (dx > 0) {
@@ -32,7 +32,7 @@ void collisionY(int** map, FloatRect& hitBox, int& dy,bool &onGround, int blockS
 			if (map[i][j] == 0) {
 				continue;
 			}
-			// �������� ������� ���������� � ��� �� ������ ����� �� �������
+			// От какого-то до такого-то будут физичные блоки
 			if ((map[i][j] > 0) && (map[i][j] <= 24)) {
 
 				if (dy > 0) {
