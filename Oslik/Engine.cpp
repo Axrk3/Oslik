@@ -44,7 +44,6 @@ void Engine::input(Event event, float time) {
 			player.jump();
 		}
 
-		
 
 	}
 

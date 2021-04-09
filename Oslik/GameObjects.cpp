@@ -10,6 +10,7 @@ void Player::initialize(String fileName,Level &_lvl) {
 	sprite.setTextureRect(IntRect(43, 13, 73, 50));
 	//sprite.setScale(2,2);
 	rect = FloatRect(lvl.spawnPoint.x, lvl.spawnPoint.y,  73,  50);
+	running = false;
 }
 
 void Player::update(float time) {
@@ -41,10 +42,11 @@ void Player::jump() {
 }
 
 void Player::run() {
-	dx *= 1.5;
+	if (!running) dx *= 1.5;
 }
 
 void Player::stopRun() {
+	running = false;
 	dx /= 1.5;
 }
 
