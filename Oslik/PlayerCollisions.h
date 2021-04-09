@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -7,7 +7,7 @@ void collisionX(int** map,FloatRect &hitBox, int &dx, int blockSize) {
 	for (int i = hitBox.top / blockSize; i < (hitBox.top + hitBox.height) / blockSize; i++) {
 		for (int j = hitBox.left / blockSize; j < (hitBox.left + hitBox.width) / blockSize; j++) {
 			if (map[i][j] == 0) continue;
-			// Физичные объекты расположим в ряд от одного числа до другого
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			if ((map[i][j] > 0) && (map[i][j] <= 24)) {
 
 				if (dx > 0) {
@@ -32,7 +32,7 @@ void collisionY(int** map, FloatRect& hitBox, int& dy,bool &onGround, int blockS
 			if (map[i][j] == 0) {
 				continue;
 			}
-			// Физичные объекты расположим в ряд от одного числа до другого
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			if ((map[i][j] > 0) && (map[i][j] <= 24)) {
 
 				if (dy > 0) {

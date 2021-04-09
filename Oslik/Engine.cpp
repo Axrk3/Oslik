@@ -1,4 +1,4 @@
-#include "Engine.h"
+п»ї#include "Engine.h"
 
 
 Engine::Engine() {
@@ -17,7 +17,7 @@ Engine::Engine() {
 	player.animation.play();
 }
 
-// Не робит блеать
+
 void Engine::input(Event event, float time) {
 	
 	if (event.type == Event::KeyPressed) {
@@ -55,7 +55,7 @@ void Engine::input(Event event, float time) {
 
 		if (!Keyboard::isKeyPressed(Keyboard::LShift)) {
 			player.stopRun();
-		}
+		}		
 
 		if (event.key.code == (Keyboard::A) && Keyboard::isKeyPressed(Keyboard::D)) player.moveRight(time);
 		if (event.key.code == (Keyboard::D) && Keyboard::isKeyPressed(Keyboard::A)) player.moveLeft(time);
@@ -68,7 +68,7 @@ void Engine::draw() {
 	window.setView(view);
 	lvl.draw(window, view);
 	window.draw(player.sprite);
-	// Вместо рисовки обычного спрайта будет рисоваться анимация
+	// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	//player.animation.draw(window, 200, 400);
 	window.display();
 }
@@ -138,7 +138,7 @@ void Engine::input() {
 			openChest = false;
 		}
 	}
-	// Если инвентарь открыт управление отключено
+	// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	if (!openInventory) {
 
 		if (Keyboard::isKeyPressed(Keyboard::A)) {
