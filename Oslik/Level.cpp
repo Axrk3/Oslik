@@ -79,7 +79,7 @@ void Level::drawBackground(RenderWindow& window,View view) {
 }
 
 void Level::draw(RenderWindow& window, View view) {
-    drawBackground(window, view);
+    //drawBackground(window, view);
     drawMap(window);
 }
 

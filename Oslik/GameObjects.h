@@ -66,6 +66,7 @@ public:
 			initiative;
 	} stats;
 public:
+	void setAnimationTexture();
 	void fight();
 	void getStats();
 };
@@ -85,7 +86,7 @@ public:
 	bool onGround, running;
 public:
 	Player() {}
-	void initialize(String fileName,Level &_lvl);
+	void initialize(String fileName,Level _lvl);
 	void update(float time);
 	void moveLeft(float time);
 	void moveRight(float time);
@@ -94,6 +95,8 @@ public:
 	void stopRun();
 	void stopX();
 	void gravity(float time);
+	void collisionX(int** map, int blockSize);
+	void collisionY(int** map, int blockSize);
 };
 
 /*

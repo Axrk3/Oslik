@@ -17,11 +17,13 @@ public:
 	View view;
 	Level lvl;
 	Player player;
+	int offsetX, offsetY;
 public:
 	Engine();
 	void input(Event event, float time);
 	void draw();
 	void update(float time);
+	void offset();
 	void start();
 };
 

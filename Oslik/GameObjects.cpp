@@ -3,34 +3,38 @@
 #include <iostream>
 
 
-void Player::initialize(String fileName,Level &_lvl) {
+void Player::initialize(String fileName,Level _lvl) {
 	lvl = _lvl;
 	texture.loadFromFile(fileName);
 	sprite.setTexture(texture);
 	sprite.setTextureRect(IntRect(43, 13, 73, 50));
-	//sprite.setScale(2,2);
-	rect = FloatRect(lvl.spawnPoint.x, lvl.spawnPoint.y,  73,  50);
+	// Переделать хитбокс при помощи инициализации
+	rect = FloatRect(lvl.spawnPoint.x, lvl.spawnPoint.y,  212, 160);
 	running = false;
 }
 
 void Player::update(float time) {
 	rect.left += dx * time;
-	collisionX(lvl.map,rect,dx,lvl.blockSize);
+	collisionX(lvl.map,lvl.blockSize);
 
 	rect.top += dy * time;
 	gravity(time);
-	collisionY(lvl.map,rect,dy,onGround,lvl.blockSize);
+	collisionY(lvl.map,lvl.blockSize);
 
-	// animation.tick(time);
+	animation.tick(time);
 
 	sprite.setPosition(rect.left,rect.top);
 }
 
 void Player::moveLeft(float time) {
+	animation.set("walk");
+	animation.flip(true);
 	dx = -speed;
 }
 
 void Player::moveRight(float time) {
+	animation.set("walk");
+	animation.flip(false);
 	dx = speed;
 }
 
@@ -52,6 +56,13 @@ void Player::stopRun() {
 }
 
 void Player::stopX() {
+	animation.set("stay");
+	if (dx > 0) {
+		animation.flip(false);
+	}
+	else {
+		animation.flip(true);
+	}
 	dx = 0;
 }
 
@@ -62,6 +73,57 @@ void Player::gravity(float time) {
 void GameObject::setRect(FloatRect _rect) {
 	rect = _rect;
 }
+
+void Player::collisionX(int** map, int blockSize) {
+	for (int i = rect.top / blockSize; i < (rect.top + rect.height) / blockSize; i++) {
+		for (int j = rect.left / blockSize; j < (rect.left + rect.width) / blockSize; j++) {
+			if (map[i][j] == 0) { 
+				continue;
+			}
+			// От какого-то до такого-то будут физичные блоки
+			if ((map[i][j] > 0) && (map[i][j] <= 24)) {
+
+				if (dx > 0) {
+					rect.left = j * blockSize - rect.width;
+					dx = 0;
+				}
+
+				if (dx < 0) {
+					rect.left = j * blockSize + blockSize;
+					dx = 0;
+				}
+
+			}
+
+		}
+	}
+}
+
+void Player::collisionY(int** map, int blockSize) {
+	for (int i = rect.top / blockSize; i < (rect.top + rect.height) / blockSize; i++) {
+		for (int j = rect.left / blockSize; j < (rect.left + rect.width) / blockSize; j++) {
+			if (map[i][j] == 0) {
+				continue;
+			}
+			// От какого-то до такого-то будут физичные блоки
+			if ((map[i][j] > 0) && (map[i][j] <= 24)) {
+
+				if (dy > 0) {
+					rect.top = i * blockSize - rect.height;
+					dy = 0; onGround = true;
+				}
+
+				if (dy < 0) {
+					rect.top = i * blockSize + blockSize;
+					dy = 0;
+				}
+				
+			}
+			
+		}
+	}
+}
+
 
 /*Player::Player() {
 	stats.HP = 85;

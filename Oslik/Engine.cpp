@@ -1,6 +1,5 @@
 ﻿#include "Engine.h"
 
-
 Engine::Engine() {
 	resolution.x = VideoMode::getDesktopMode().width;
 	resolution.y = VideoMode::getDesktopMode().height;
@@ -8,15 +7,17 @@ Engine::Engine() {
 	window.create(VideoMode(resolution.x, resolution.y), "Game Engine v.1.1", Style::Fullscreen);
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
 
-	//backgroundTexture.loadFromFile("back.jpg");
-	//backgroundSprite.setTexture(backgroundTexture);
+	offsetX = resolution.x / 2;
+	offsetY = resolution.y / 2;
+
+	// Вынести в отдельный метод инициализации анимации через цикл у всех существ;
 	lvl.loadLVL(std::string("maps/lvl.txt"));
-	player.initialize("testsprite.png",lvl);
-	player.animation.create("walk", player.texture,0,0,150,63,9,5,150);
-	player.animation.set("walk");
+	player.initialize("testhero.png",lvl);
+	player.animation.create("walk", player.texture, 0, 160, 212, 160, 8, 5, 212);
+	player.animation.create("stay", player.texture, 0, 0, 210, 160, 8, 5, 210);
+	player.animation.set("stay");
 	player.animation.play();
 }
-
 
 void Engine::input(Event event, float time) {
 	
@@ -44,7 +45,6 @@ void Engine::input(Event event, float time) {
 			player.jump();
 		}
 
-
 	}
 
 	else if (event.type == Event::KeyReleased) {
@@ -53,7 +53,7 @@ void Engine::input(Event event, float time) {
 			player.stopX();
 		}
 
-		if (!Keyboard::isKeyPressed(Keyboard::LShift)) {
+		if (event.key.code == (Keyboard::LShift) && !Keyboard::isKeyPressed(Keyboard::LShift)) {
 			player.stopRun();
 		}		
 
@@ -67,16 +67,28 @@ void Engine::draw() {
 	window.clear(Color::White);
 	window.setView(view);
 	lvl.draw(window, view);
-	window.draw(player.sprite);
-	// Vmesto playera budet vivod animacii
-	//player.animation.draw(window, 200, 400);
+	//window.draw(player.sprite);
+	player.animation.draw(window, player.rect.left, player.rect.top);
 	window.display();
 }
 
 void Engine::update(float time) {
 	//worldUpdate(time);
 	player.update(time);
-	view.setCenter(player.rect.left, player.rect.top);
+
+	offset();
+
+	view.setCenter(offsetX, offsetY);
+}
+
+void Engine::offset() {
+	if ((player.rect.left > resolution.x / 2) && (player.rect.left < lvl.mapSize.x * lvl.blockSize - resolution.x / 2)) {
+		offsetX = player.rect.left;
+	}
+
+	if ((player.rect.top > resolution.y / 2) && (player.rect.top < lvl.mapSize.y * lvl.blockSize - resolution.y / 2)) {
+		offsetY = player.rect.top;
+	}
 }
 
 void Engine::start() {
@@ -102,7 +114,6 @@ void Engine::start() {
 		draw();
 	}
 }
-
 
 /*Engine::Engine() {
 	resolution.x = VideoMode::getDesktopMode().width;
