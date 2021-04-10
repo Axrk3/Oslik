@@ -12,9 +12,9 @@ Engine::Engine() {
 
 	// Вынести в отдельный метод инициализации анимации через цикл у всех существ;
 	lvl.loadLVL(std::string("maps/lvl.txt"));
-	player.initialize("testhero.png",lvl);
-	player.animation.create("walk", player.texture, 0, 160, 212, 160, 8, 5, 212);
-	player.animation.create("stay", player.texture, 0, 0, 210, 160, 8, 5, 210);
+	player.initialize("testhero.png",lvl.map,lvl.blockSize);
+	player.animation.create("walk", player.texture, 0, 160, 212, 160, 8, 10, 212);
+	player.animation.create("stay", player.texture, 0, 0, 210, 160, 8, 10, 210);
 	player.animation.set("stay");
 	player.animation.play();
 }

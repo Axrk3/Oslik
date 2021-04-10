@@ -1,25 +1,25 @@
 #include "GameObjects.h"
-#include "PlayerCollisions.h"
 #include <iostream>
 
 
-void Player::initialize(String fileName,Level _lvl) {
-	lvl = _lvl;
+void Player::initialize(String fileName,int** &_map, int _blockSize) {
+	map = _map;
+	blockSize = _blockSize;
 	texture.loadFromFile(fileName);
 	sprite.setTexture(texture);
 	sprite.setTextureRect(IntRect(43, 13, 73, 50));
-	// Переделать хитбокс при помощи инициализации
-	rect = FloatRect(lvl.spawnPoint.x, lvl.spawnPoint.y,  212, 160);
+	// Переделать хитбокс при помощи инициализации и задать спавнпоинт из уровня
+	rect = FloatRect(200, 400, 200, 160);
 	running = false;
 }
 
 void Player::update(float time) {
 	rect.left += dx * time;
-	collisionX(lvl.map,lvl.blockSize);
+	collisionX();
 
 	rect.top += dy * time;
 	gravity(time);
-	collisionY(lvl.map,lvl.blockSize);
+	collisionY();
 
 	animation.tick(time);
 
@@ -74,7 +74,7 @@ void GameObject::setRect(FloatRect _rect) {
 	rect = _rect;
 }
 
-void Player::collisionX(int** map, int blockSize) {
+void Player::collisionX() {
 	for (int i = rect.top / blockSize; i < (rect.top + rect.height) / blockSize; i++) {
 		for (int j = rect.left / blockSize; j < (rect.left + rect.width) / blockSize; j++) {
 			if (map[i][j] == 0) { 
@@ -99,7 +99,7 @@ void Player::collisionX(int** map, int blockSize) {
 	}
 }
 
-void Player::collisionY(int** map, int blockSize) {
+void Player::collisionY() {
 	for (int i = rect.top / blockSize; i < (rect.top + rect.height) / blockSize; i++) {
 		for (int j = rect.left / blockSize; j < (rect.left + rect.width) / blockSize; j++) {
 			if (map[i][j] == 0) {
@@ -119,7 +119,6 @@ void Player::collisionY(int** map, int blockSize) {
 				}
 				
 			}
-			
 		}
 	}
 }

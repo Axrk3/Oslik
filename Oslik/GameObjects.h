@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Animation.h"
-#include "Level.h"
 
 using namespace sf;
 
@@ -81,12 +80,12 @@ class Enemy : public Character {
 
 class Player : public Character {
 public:	
-	Level lvl;
-	int dx = 0, dy = 0, speed = 400, g = 1000;
+	int dx = 0, dy = 0, speed = 400, g = 1000, blockSize;
+	int** map;
 	bool onGround, running;
 public:
 	Player() {}
-	void initialize(String fileName,Level _lvl);
+	void initialize(String fileName,int** &map, int blockSize);
 	void update(float time);
 	void moveLeft(float time);
 	void moveRight(float time);
@@ -95,8 +94,8 @@ public:
 	void stopRun();
 	void stopX();
 	void gravity(float time);
-	void collisionX(int** map, int blockSize);
-	void collisionY(int** map, int blockSize);
+	void collisionX();
+	void collisionY();
 };
 
 /*
