@@ -4,7 +4,7 @@ Engine::Engine() {
 	resolution.x = VideoMode::getDesktopMode().width;
 	resolution.y = VideoMode::getDesktopMode().height;
 
-	window.create(VideoMode(resolution.x, resolution.y), "Game Engine v.1.1", Style::Fullscreen);
+	window.create(VideoMode(resolution.x, resolution.y), "Game Engine v0.2", Style::Fullscreen);
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
 
 	offsetX = resolution.x / 2;
@@ -13,10 +13,7 @@ Engine::Engine() {
 	// Вынести в отдельный метод инициализации анимации через цикл у всех существ;
 	lvl.loadLVL(std::string("maps/lvl.txt"));
 	player.initialize("testhero.png",lvl.map,lvl.blockSize);
-	player.animation.create("walk", player.texture, 0, 160, 212, 160, 8, 10, 212);
-	player.animation.create("stay", player.texture, 0, 0, 210, 160, 8, 10, 210);
-	player.animation.set("stay");
-	player.animation.play();
+	menu.initializeMenu(Vector2f(250,500),Vector2f(250,100));
 }
 
 void Engine::input(Event event, float time) {
@@ -24,16 +21,14 @@ void Engine::input(Event event, float time) {
 	if (event.type == Event::KeyPressed) {
 
 		if (event.key.code == (Keyboard::Escape)) {
-			window.close();
+			menuIsOpen = true;
 		}
 
 		if (event.key.code == (Keyboard::A)) {
-			
 			player.moveLeft(time);
 		}
 
 		if (event.key.code == (Keyboard::D)) {
-			
 			player.moveRight(time);
 		}
 
@@ -58,6 +53,7 @@ void Engine::input(Event event, float time) {
 		}		
 
 		if (event.key.code == (Keyboard::A) && Keyboard::isKeyPressed(Keyboard::D)) player.moveRight(time);
+
 		if (event.key.code == (Keyboard::D) && Keyboard::isKeyPressed(Keyboard::A)) player.moveLeft(time);
 		
 	}
@@ -69,15 +65,19 @@ void Engine::draw() {
 	lvl.draw(window, view);
 	//window.draw(player.sprite);
 	player.animation.draw(window, player.rect.left, player.rect.top);
+	// Вынести в отдельный метод
+	if (menuIsOpen) {
+		menu.drawMenu(window,view.getCenter());
+		menuIsOpen = false;
+		clock.restart();
+	}
 	window.display();
 }
 
 void Engine::update(float time) {
 	//worldUpdate(time);
 	player.update(time);
-
 	offset();
-
 	view.setCenter(offsetX, offsetY);
 }
 
@@ -92,9 +92,8 @@ void Engine::offset() {
 }
 
 void Engine::start() {
-	Clock clock;
 	while (window.isOpen()) {
-		float time = clock.getElapsedTime().asSeconds();
+		time = clock.getElapsedTime().asSeconds();
 		clock.restart();
 		Event event;
 		while (window.pollEvent(event))

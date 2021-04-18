@@ -18,10 +18,10 @@ public:
 };
 
 class Item : public GameObject {
+	bool isEmpty = true;
 	Texture textureInInventory;
 	Sprite spriteInInventory;
 };
-
 
 class Equipment : public Item {
 public:
@@ -40,8 +40,8 @@ public:
 
 class Inventory {
 public:
-	Consumable consum[12];
-	Equipment equip[12];
+	Consumable consum[8];
+	Equipment equip[8];
 	int quantityConsum, quantityEquip;
 	RectangleShape rect;
 	Vector2f scale;

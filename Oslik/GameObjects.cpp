@@ -6,8 +6,10 @@ void Player::initialize(String fileName,int** &_map, int _blockSize) {
 	map = _map;
 	blockSize = _blockSize;
 	texture.loadFromFile(fileName);
-	sprite.setTexture(texture);
-	sprite.setTextureRect(IntRect(43, 13, 73, 50));
+	animation.create("walk", texture, 0, 160, 212, 160, 8, 8, 212);
+	animation.create("stay", texture, 0, 0, 210, 160, 8, 5, 210);
+	animation.set("stay");
+	animation.play();
 	// Переделать хитбокс при помощи инициализации и задать спавнпоинт из уровня
 	rect = FloatRect(200, 400, 200, 160);
 	running = false;

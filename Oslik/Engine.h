@@ -5,6 +5,7 @@
 #include "Level.h"
 #include <iostream>
 #include <string>
+#include "Menu.h"
 
 using namespace sf;
 
@@ -17,7 +18,11 @@ public:
 	View view;
 	Level lvl;
 	Player player;
+	Clock clock;
+	GameMenu menu;
 	int offsetX, offsetY;
+	float time;
+	bool menuIsOpen = false;
 public:
 	Engine();
 	void input(Event event, float time);
