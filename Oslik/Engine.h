@@ -19,7 +19,7 @@ public:
 	Level lvl;
 	Player player;
 	Clock clock;
-	GameMenu menu;
+	GameMenu menu,mainMenu;
 	int offsetX, offsetY;
 	float time;
 	bool menuIsOpen = false;
@@ -29,6 +29,8 @@ public:
 	void draw();
 	void update(float time);
 	void offset();
+	void drawMenu();
 	void start();
+	void startMainMenu();
 };
 

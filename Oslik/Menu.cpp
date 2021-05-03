@@ -27,7 +27,9 @@ void GameMenu::initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize) {
 }
 
 void GameMenu::menuInput() {
-	mousePosition = (Vector2f) Mouse::getPosition();
+	mousePosition.x = menu.getPosition().x - 1920 / 2 + Mouse::getPosition().x;
+	mousePosition.y = menu.getPosition().y - 1080 / 2 + Mouse::getPosition().y;
+
 	for (int i = 0; i < menuBarNum; i++) {
 		if (mousePosition.x >= menuBar[i].getPosition().x && mousePosition.x <= menuBar[i].getPosition().x + menuBarSize.x &&
 			mousePosition.y >= menuBar[i].getPosition().y && mousePosition.y <= menuBar[i].getPosition().y + menuBarSize.y) {
@@ -36,20 +38,7 @@ void GameMenu::menuInput() {
 		}
 		else if (menuBar[i].getFillColor() != Color::Green) menuBar[i].setFillColor(Color::Green);
 	}
-
-	/*
-	if (Keyboard::isKeyPressed(Keyboard::W)) {
-		menuBar[currentBar].setFillColor(Color::Green);
-		currentBar--;
-		if (currentBar < 0) currentBar = menuBarNum - 1;
-	}
-	if (Keyboard::isKeyPressed(Keyboard::S)) {
-		menuBar[currentBar].setFillColor(Color::Green);
-		currentBar++;
-		if (currentBar == menuBarNum) currentBar = 0;
-	}
-	menuBar[currentBar].setFillColor(Color::Red);
-	*/
+	
 }
 
 // Костыль! Переделать
@@ -65,7 +54,6 @@ void GameMenu::menuLogic() {
 }
 
 void GameMenu::drawMenu(RenderWindow &window,Vector2f menuPosition) {
-	updateMenu(menuPosition);
 	while (true) {
 		menuInput();
 		menuLogic();
@@ -83,10 +71,23 @@ void GameMenu::drawMenu(RenderWindow &window,Vector2f menuPosition) {
 }
 
 void GameMenu::updateMenu(Vector2f _menuPosition) {
-
 	menu.setPosition(_menuPosition);
 	for (int i = 0; i < menuBarNum; i++) {
-		menuBar[i].setPosition(menu.getPosition().x, i * menuBarSize.y + menu.getPosition().y);
+		menuBar[i].setPosition(_menuPosition.x, i * menuBarSize.y + _menuPosition.y);
 		text[i].setPosition(menuBar[i].getPosition().x + 10, menuBar[i].getPosition().y + 5);
 	}
 }
+
+
+void MainMenu::menuInput() {
+
+}
+
+void MainMenu::menuLogic() {
+
+}
+
+void MainMenu::initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize) {
+
+}
+
