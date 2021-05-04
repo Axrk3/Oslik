@@ -20,7 +20,7 @@ public:
 	std::string fileName;
 public:
 	void loadLVL(const std::string fileName);
-	void drawMap(RenderWindow &window);
+	void drawMap(RenderWindow &window, View view);
 	void drawBackground(RenderWindow &window, View view);
 	void draw(RenderWindow& window, View view);
 	void calculateTile(int tileID);

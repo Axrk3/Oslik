@@ -63,9 +63,12 @@ void Level::calculateTile(int tileID) {
     tile.setTextureRect(IntRect(tileIDcord.x, tileIDcord.y, blockSize, blockSize));
 }
 
-void Level::drawMap(RenderWindow &window) {
-    for (int i = 0; i < mapSize.y; i++) {
-        for (int j = 0; j < mapSize.x; j++) {
+void Level::drawMap(RenderWindow &window, View view) {
+    
+    for (int i = (view.getCenter().y - 540) / 64 < 0 ? 0 : (view.getCenter().y - 540) / 64;
+        i < ((view.getCenter().y + 540) / 64 > mapSize.y ? mapSize.y : (view.getCenter().y + 540) / 64); i++) {
+        for (int j = (view.getCenter().x - 960) / 64 < 0 ? 0 : (view.getCenter().x - 960) / 64;
+            j < ((view.getCenter().x + 960) / 64 > mapSize.x ? mapSize.x : (view.getCenter().x + 960) / 64); j++) {
             if (map[i][j] == 0) continue;
             calculateTile(map[i][j]);
             tile.setPosition(j * blockSize, i * blockSize);
@@ -81,7 +84,7 @@ void Level::drawBackground(RenderWindow& window,View view) {
 
 void Level::draw(RenderWindow& window, View view) {
     //drawBackground(window, view);
-    drawMap(window);
+    drawMap(window,view);
 }
 
 void Level::worldUpdate() {
