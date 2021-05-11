@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-void Player::initialize(String fileName,int** &_map, int _blockSize) {
+void Player::initialize(String fileName,int** &_map, int _blockSize,Vector2f spawnPoint) {
 	map = _map;
 	blockSize = _blockSize;
 	texture.loadFromFile(fileName);
@@ -11,7 +11,7 @@ void Player::initialize(String fileName,int** &_map, int _blockSize) {
 	animation.set("stay");
 	animation.play();
 	// Переделать хитбокс при помощи инициализации и задать спавнпоинт из уровня
-	rect = FloatRect(200, 400, 200, 160);
+	rect = FloatRect(spawnPoint, Vector2f(200, 160));
 	running = false;
 }
 
@@ -83,7 +83,7 @@ void Player::collisionX() {
 				continue;
 			}
 			// От какого-то до такого-то будут физичные блоки
-			if ((map[i][j] > 0) && (map[i][j] <= 24)) {
+			if ((map[i][j] > 0) && (map[i][j] <= 200)) {
 
 				if (dx > 0) {
 					rect.left = j * blockSize - rect.width;
@@ -108,7 +108,7 @@ void Player::collisionY() {
 				continue;
 			}
 			// От какого-то до такого-то будут физичные блоки
-			if ((map[i][j] > 0) && (map[i][j] <= 24)) {
+			if ((map[i][j] > 0) && (map[i][j] <= 200)) {
 
 				if (dy > 0) {
 					rect.top = i * blockSize - rect.height;
@@ -124,6 +124,11 @@ void Player::collisionY() {
 		}
 	}
 }
+
+/*void Player::openInventory(Window& window) {
+	inventory.open(window);
+	inventory.input();
+}*/
 
 Consumable::Consumable() {
 	rect.height = rect.width = 64;
@@ -146,23 +151,34 @@ Inventory::Inventory() {
 	attackRect.setPosition(1248, 328);
 	attackRect.setFillColor(Color::Red);
 
-	items[0].rect.left = 540;
-	items[0].rect.top = 320;
+	consumable[0].rect.left = 540;
+	consumable[0].rect.top = 320;
 
-	items[1].rect.left = 640;
-	items[1].rect.top = 320;
+	consumable[1].rect.left = 640;
+	consumable[1].rect.top = 320;
 
-	items[2].rect.left = 540;
-	items[2].rect.top = 420;
-	/*for (int i = 0; i < 8; i++) {
-		items[i].rect.setSize(Vector2f(64,64));
+	consumable[2].rect.left = 540;
+	consumable[2].rect.top = 420;
+	/*for (int i = 0; i < 3; i++) {
 		if (i % 2 == 0) {
 			items[i].rect.setPosition(540,  320);
 		}
 	}*/
 }
 
-void Inventory::addItem(Consumable& item) {
+void Inventory::open(RenderWindow& window) {
+	RectangleShape r;
+	r.setSize(Vector2f(500, 500));
+	r.setPosition(Vector2f(100, 100));
+	r.setFillColor(Color::White);
+	while (true) {
+	window.draw(r);
+	window.display();
+	if (Keyboard::isKeyPressed(Keyboard::C)) break;
+	}
+}
+
+/*void Inventory::addItem(Consumable& item) {
 	for (int i = 0; i < 8; i++) {
 		if (items[i].isEmpty) {
 			item.rect.left = items[i].rect.left;
@@ -173,7 +189,7 @@ void Inventory::addItem(Consumable& item) {
 			break;
 		}
 	}
-}
+}*/
 
 void Inventory::addItem(Equipment item) {
 

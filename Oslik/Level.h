@@ -1,8 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "GameObjects.h"
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 using namespace sf;
 
@@ -13,8 +15,11 @@ public:
 	Texture backgroundTexture;
 	Texture tileSet;
 	RectangleShape tile;
-	Vector2i mapSize,spawnPoint,tileIDcord;
-	Vector2f resolution;
+	Vector2i mapSize,tileIDcord;
+	Vector2f resolution, spawnPoint;
+	std::vector <Item> items;
+	std::vector <Friend> friends;
+	std::vector <Enemy> enemies;
 	int tileSetWidth,blockSize;
 	int** map;
 	std::string fileName;

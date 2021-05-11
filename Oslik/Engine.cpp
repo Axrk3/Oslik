@@ -6,13 +6,12 @@ Engine::Engine() {
 
 	window.create(VideoMode(resolution.x, resolution.y), "Game Engine v0.2", Style::Fullscreen);
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
-
 	offsetX = resolution.x / 2;
 	offsetY = resolution.y / 2;
 
 	// Вынести в отдельный метод инициализации анимации через цикл у всех существ;
 	lvl.loadLVL(std::string("maps/lvl.txt"));
-	player.initialize("testhero.png",lvl.map,lvl.blockSize);
+	player.initialize("testhero.png",lvl.map,lvl.blockSize,lvl.spawnPoint);
 	menu.initializeMenu(Vector2f(250,500),Vector2f(250,100));
 	mainMenu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
 }
@@ -39,6 +38,10 @@ void Engine::input(Event event, float time) {
 
 		if (event.key.code == (Keyboard::W)) {
 			player.jump();
+		}
+
+		if (event.key.code == (Keyboard::I)) {
+			player.inventory.open(window);
 		}
 
 	}

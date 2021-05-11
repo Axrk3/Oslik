@@ -9,6 +9,7 @@ Level::Level() {
 
 void Level::loadLVL(const string _fileName) {
     string line;
+    int x, y, num;
     fileName = _fileName;
 
     ifstream in(_fileName);
@@ -38,33 +39,36 @@ void Level::loadLVL(const string _fileName) {
         backgroundTexture.loadFromFile(line.substr(line.find('"') + 1));
         backgroundSprite.setTexture(backgroundTexture);
         
-        /*getline(in, line); getline(in, line);
-        spawnPoint.x = atoi(line.c_str());
-        getline(in, line);
-        spawnPoint.y = atoi(line.c_str());*/
-        spawnPoint.x = 200; spawnPoint.y = 400;
-
+        // block array
         for (int i = 0; i < mapSize.y; i++) {
             for (int j = 0; j < mapSize.x; j++) {
                 in >> map[i][j];
             }
         }
+        // spawnpoint
+        in >> line;
+        in >> spawnPoint.x; in >> spawnPoint.y;
+        // friend
+        in >> line;
+        in >> x; in >> y; in >> num;
+        // createFriend(x,y,num);
     }
     in.close();
 }
 
 void Level::calculateTile(int tileID) {
-    if (tileID % tileSetWidth == 0) tileIDcord.x = tileSetWidth - 1 * blockSize;
+    if (tileID % tileSetWidth == 0) tileIDcord.x = (tileSetWidth - 1) * blockSize;
     else tileIDcord.x = (tileID % tileSetWidth - 1) * blockSize;
 
-    if (tileID / tileSetWidth == 0) tileIDcord.y = tileSetWidth - 1 * blockSize;
+    if (tileID / tileSetWidth == 0) tileIDcord.y = 0;
+    else if (tileID % tileSetWidth == 0) tileIDcord.y = ((tileID / tileSetWidth) - 1) * blockSize;
     else tileIDcord.y = (tileID / tileSetWidth) * blockSize;
 
     tile.setTextureRect(IntRect(tileIDcord.x, tileIDcord.y, blockSize, blockSize));
 }
 
 void Level::drawMap(RenderWindow &window, View view) {
-    
+    // resolution.x/2 = 960, resolution.y/2 = 540, blockSize = 64;
     for (int i = (view.getCenter().y - 540) / 64 < 0 ? 0 : (view.getCenter().y - 540) / 64;
         i < ((view.getCenter().y + 540) / 64 > mapSize.y ? mapSize.y : (view.getCenter().y + 540) / 64); i++) {
         for (int j = (view.getCenter().x - 960) / 64 < 0 ? 0 : (view.getCenter().x - 960) / 64;
@@ -83,7 +87,7 @@ void Level::drawBackground(RenderWindow& window,View view) {
 }
 
 void Level::draw(RenderWindow& window, View view) {
-    //drawBackground(window, view);
+    drawBackground(window, view);
     drawMap(window,view);
 }
 

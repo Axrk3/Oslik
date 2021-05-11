@@ -19,7 +19,6 @@ public:
 
 class Item : public GameObject {
 public:
-	bool isEmpty = true;
 	Texture textureInInventory;
 	Sprite spriteInInventory;
 };
@@ -40,22 +39,23 @@ public:
 	Sprite getSpriteInInventory();
 };
 
-/*class Cell {
+class Cell {
 public:
 	FloatRect rect;
-	Item item;
+	Item *item;
 	bool isEmpty = true;
-};*/
+	int count = 0;
+};
 
 class Inventory : public GameObject {
 public:
-	Consumable items[8];
+	Cell consumable[8];
 	RectangleShape attackRect, hpRect;
 	int quantityConsum, quantityEquip;
 
 public:
 	Inventory();
-	void open();
+	void open(RenderWindow &window);
 	void addItem(Consumable& item);
 	void addItem(Equipment item);
 };
@@ -91,9 +91,10 @@ public:
 	int dx = 0, dy = 0, speed = 400, g = 1000, blockSize;
 	int** map;
 	bool onGround, running;
+	Inventory inventory;
 public:
 	Player() {}
-	void initialize(String fileName,int** &map, int blockSize);
+	void initialize(String fileName,int** &map, int blockSize, Vector2f spawnPoint);
 	void update(float time);
 	void moveLeft(float time);
 	void moveRight(float time);
@@ -104,4 +105,5 @@ public:
 	void gravity(float time);
 	void collisionX();
 	void collisionY();
+	void openInventory(RenderWindow &window);
 };
