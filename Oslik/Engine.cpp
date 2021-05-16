@@ -41,7 +41,7 @@ void Engine::input(Event event, float time) {
 		}
 
 		if (event.key.code == (Keyboard::I)) {
-			player.inventory.open(window);
+			// Наверно через это будет реализован инвентарь -_- (Максим привет!)
 		}
 
 	}
@@ -92,7 +92,7 @@ void Engine::offset() {
 
 void Engine::drawMenu() {
 	if (menuIsOpen) {
-		menu.drawMenu(window, view.getCenter());
+		menu.invokeMenu(window);
 		menuIsOpen = false;
 		clock.restart();
 	}
@@ -125,8 +125,13 @@ void Engine::start() {
 	}
 }
 
-void Engine::startMainMenu() {
-	mainMenu.drawMenu(window, Vector2f(resolution.x / 2, resolution.y / 2));
+void Engine::load() {
 	player.update(0);
 	sleep(milliseconds(500));
+}
+
+int Engine::startMainMenu() {
+	mainMenu.drawMenu(window);
+	mainMenu.menuLogic();
+	return 0;
 }

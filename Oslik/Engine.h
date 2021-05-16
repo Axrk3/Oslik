@@ -19,18 +19,20 @@ public:
 	Level lvl;
 	Player player;
 	Clock clock;
-	GameMenu menu,mainMenu;
+	GameMenu menu;
+	MainMenu mainMenu;
 	int offsetX, offsetY;
 	float time;
 	bool menuIsOpen = false;
-public:
-	Engine();
 	void input(Event event, float time);
 	void draw();
 	void update(float time);
 	void offset();
 	void drawMenu();
+	void load();
+public:
+	Engine();
 	void start();
-	void startMainMenu();
+	int startMainMenu();
 };
 

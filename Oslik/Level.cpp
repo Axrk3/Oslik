@@ -8,7 +8,7 @@ Level::Level() {
 }
 
 void Level::loadLVL(const string _fileName) {
-    string line;
+    string line,path = "maps/";
     int x, y, num;
     fileName = _fileName;
 
@@ -29,14 +29,14 @@ void Level::loadLVL(const string _fileName) {
 
         // Закинуть текстуры в папку maps и приклеить к началу строки maps/
         getline(in, line);
-        tileSet.loadFromFile(line.substr(line.find('"') + 1));
+        tileSet.loadFromFile(path + line.substr(line.find('"') + 1));
         tile.setTexture(&tileSet);
         
         getline(in, line);
         tileSetWidth = atoi(line.substr(15).c_str());
 
         getline(in,line);
-        backgroundTexture.loadFromFile(line.substr(line.find('"') + 1));
+        backgroundTexture.loadFromFile(path + line.substr(line.find('"') + 1));
         backgroundSprite.setTexture(backgroundTexture);
         
         // block array
@@ -51,7 +51,7 @@ void Level::loadLVL(const string _fileName) {
         // friend
         in >> line;
         in >> x; in >> y; in >> num;
-        // createFriend(x,y,num);
+        // createFriend(); и т.д.
     }
     in.close();
 }
