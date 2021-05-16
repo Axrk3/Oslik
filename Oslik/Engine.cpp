@@ -13,7 +13,7 @@ Engine::Engine() {
 	lvl.loadLVL(std::string("maps/lvl.txt"));
 	player.initialize("testhero.png",lvl.map,lvl.blockSize,lvl.spawnPoint);
 	menu.initializeMenu(Vector2f(250,500),Vector2f(250,100));
-	mainMenu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
+	//mainMenu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
 }
 
 void Engine::input(Event event, float time) {
@@ -130,8 +130,8 @@ void Engine::load() {
 	sleep(milliseconds(500));
 }
 
-int Engine::startMainMenu() {
+/*int Engine::startMainMenu() {
 	mainMenu.drawMenu(window);
 	mainMenu.menuLogic();
 	return 0;
-}
+}*/

@@ -20,7 +20,7 @@ public:
 	Player player;
 	Clock clock;
 	GameMenu menu;
-	MainMenu mainMenu;
+	//MainMenu mainMenu;
 	int offsetX, offsetY;
 	float time;
 	bool menuIsOpen = false;
@@ -33,6 +33,6 @@ public:
 public:
 	Engine();
 	void start();
-	int startMainMenu();
+	//int startMainMenu();
 };
 

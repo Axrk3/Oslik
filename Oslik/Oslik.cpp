@@ -5,10 +5,11 @@ int main() {
     Engine engine;
     // Костылина та ещё, сделать главное меню другим классом 
     //engine.startMainMenu();
-    do {
+    /*do {
         switch (engine.startMainMenu()) {
         case 0: engine.start();
         }
-    } while (true);
+    } while (true);*/
+    engine.start();
     return 0;
 }
