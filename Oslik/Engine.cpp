@@ -11,8 +11,8 @@ Engine::Engine() {
 
 	// Вынести в отдельный метод инициализации анимации через цикл у всех существ;
 	lvl.loadLVL(std::string("maps/lvl.txt"));
-	player.initialize("testhero.png",lvl.map,lvl.blockSize,lvl.spawnPoint);
-	menu.initializeMenu(Vector2f(250,500),Vector2f(250,100));
+	player.initialize("testhero.png", lvl.map, lvl.blockSize, lvl.spawnPoint);
+	menu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
 	//mainMenu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
 }
 
@@ -67,7 +67,7 @@ void Engine::draw() {
 	window.clear(Color::White);
 	window.setView(view);
 	lvl.draw(window, view);
-	player.animation.draw(window, player.rect.left, player.rect.top);
+	player.animation.draw(window, player.hitBox.left, player.hitBox.top);
 	drawMenu();
 	window.display();
 }
@@ -81,12 +81,12 @@ void Engine::update(float time) {
 }
 
 void Engine::offset() {
-	if ((player.rect.left > resolution.x / 2) && (player.rect.left < lvl.mapSize.x * lvl.blockSize - resolution.x / 2)) {
-		offsetX = player.rect.left;
+	if ((player.hitBox.left > resolution.x / 2) && (player.hitBox.left < lvl.mapSize.x * lvl.blockSize - resolution.x / 2)) {
+		offsetX = player.hitBox.left;
 	}
 
-	if ((player.rect.top > resolution.y / 2) && (player.rect.top < lvl.mapSize.y * lvl.blockSize - resolution.y / 2)) {
-		offsetY = player.rect.top;
+	if ((player.hitBox.top > resolution.y / 2) && (player.hitBox.top < lvl.mapSize.y * lvl.blockSize - resolution.y / 2)) {
+		offsetY = player.hitBox.top;
 	}
 }
 

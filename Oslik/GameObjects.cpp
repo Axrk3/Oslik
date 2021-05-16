@@ -11,21 +11,21 @@ void Player::initialize(String fileName,int** &_map, int _blockSize,Vector2f spa
 	animation.set("stay");
 	animation.play();
 	// Переделать хитбокс при помощи инициализации и задать спавнпоинт из уровня
-	rect = FloatRect(spawnPoint, Vector2f(200, 160));
+	hitBox = FloatRect(spawnPoint, Vector2f(200, 160));
 	running = false;
 }
 
 void Player::update(float time) {
-	rect.left += dx * time;
+	hitBox.left += dx * time;
 	collisionX();
 
-	rect.top += dy * time;
+	hitBox.top += dy * time;
 	gravity(time);
 	collisionY();
 
 	animation.tick(time);
 
-	sprite.setPosition(rect.left,rect.top);
+	sprite.setPosition(hitBox.left, hitBox.top);
 }
 
 void Player::moveLeft(float time) {
@@ -72,13 +72,13 @@ void Player::gravity(float time) {
 	dy += g * time;
 }
 
-void GameObject::setRect(FloatRect _rect) {
-	rect = _rect;
+void GameObject::setHitBox(FloatRect _hitBox) {
+	hitBox = _hitBox;
 }
 
 void Player::collisionX() {
-	for (int i = rect.top / blockSize; i < (rect.top + rect.height) / blockSize; i++) {
-		for (int j = rect.left / blockSize; j < (rect.left + rect.width) / blockSize; j++) {
+	for (int i = hitBox.top / blockSize; i < (hitBox.top + hitBox.height) / blockSize; i++) {
+		for (int j = hitBox.left / blockSize; j < (hitBox.left + hitBox.width) / blockSize; j++) {
 			if (map[i][j] == 0) { 
 				continue;
 			}
@@ -86,12 +86,12 @@ void Player::collisionX() {
 			if ((map[i][j] > 0) && (map[i][j] <= 200)) {
 
 				if (dx > 0) {
-					rect.left = j * blockSize - rect.width;
+					hitBox.left = j * blockSize - hitBox.width;
 					dx = 0;
 				}
 
 				if (dx < 0) {
-					rect.left = j * blockSize + blockSize;
+					hitBox.left = j * blockSize + blockSize;
 					dx = 0;
 				}
 
@@ -102,8 +102,8 @@ void Player::collisionX() {
 }
 
 void Player::collisionY() {
-	for (int i = rect.top / blockSize; i < (rect.top + rect.height) / blockSize; i++) {
-		for (int j = rect.left / blockSize; j < (rect.left + rect.width) / blockSize; j++) {
+	for (int i = hitBox.top / blockSize; i < (hitBox.top + hitBox.height) / blockSize; i++) {
+		for (int j = hitBox.left / blockSize; j < (hitBox.left + hitBox.width) / blockSize; j++) {
 			if (map[i][j] == 0) {
 				continue;
 			}
@@ -111,12 +111,12 @@ void Player::collisionY() {
 			if ((map[i][j] > 0) && (map[i][j] <= 200)) {
 
 				if (dy > 0) {
-					rect.top = i * blockSize - rect.height;
+					hitBox.top = i * blockSize - hitBox.height;
 					dy = 0; onGround = true;
 				}
 
 				if (dy < 0) {
-					rect.top = i * blockSize + blockSize;
+					hitBox.top = i * blockSize + blockSize;
 					dy = 0;
 				}
 				
@@ -131,7 +131,7 @@ void Player::collisionY() {
 }*/
 
 Consumable::Consumable() {
-	rect.height = rect.width = 64;
+	hitBox.height = hitBox.width = 64;
 	name = "";
 	maxQuantity = 0;
 }
@@ -148,17 +148,17 @@ Inventory::Inventory() {
 	sprite.setPosition(480, 270);
 
 
-	attackRect.setPosition(1248, 328);
-	attackRect.setFillColor(Color::Red);
+	attackBar.setPosition(1248, 328);
+	attackBar.setFillColor(Color::Red);
 
-	consumable[0].rect.left = 540;
-	consumable[0].rect.top = 320;
+	consumable[0].hitBox.left = 540;
+	consumable[0].hitBox.top = 320;
 
-	consumable[1].rect.left = 640;
-	consumable[1].rect.top = 320;
+	consumable[1].hitBox.left = 640;
+	consumable[1].hitBox.top = 320;
 
-	consumable[2].rect.left = 540;
-	consumable[2].rect.top = 420;
+	consumable[2].hitBox.left = 540;
+	consumable[2].hitBox.top = 420;
 	/*for (int i = 0; i < 3; i++) {
 		if (i % 2 == 0) {
 			items[i].rect.setPosition(540,  320);
@@ -193,4 +193,28 @@ void Inventory::open(RenderWindow& window) {
 
 void Inventory::addItem(Equipment item) {
 
+}
+
+Swordsman::Swordsman(int _x, int _y) {
+	hitBox.left = _x;
+	hitBox.top = _y;
+
+	texture.loadFromFile("");
+	sprite.setTexture(texture);
+}
+
+Fister::Fister(int _x, int _y) {
+	hitBox.left = _x;
+	hitBox.top = _y;
+
+	texture.loadFromFile("");
+	sprite.setTexture(texture);
+}
+
+Berserk::Berserk(int _x, int _y) {
+	hitBox.left = _x;
+	hitBox.top = _y;
+
+	texture.loadFromFile("");
+	sprite.setTexture(texture);
 }
