@@ -48,7 +48,7 @@ void GameMenu::menuLogic() {
 	}
 	
 	if (menuBar[1].getFillColor() == Color::Magenta) {
-		exit(1);
+		closeGame = true;
 	}
 }
 
@@ -66,11 +66,15 @@ int GameMenu::invokeMenu(RenderWindow &window) {
 	while (true) {
 		menuInput();
 		menuLogic();
-		drawMenu(window);
 		if (closeMenu) {
 			closeMenu = false;
-			return 0;
+			return false;
 		}
+		if (closeGame) {
+			closeGame = false;
+			return true;
+		}
+		drawMenu(window);
 	}
 }
 
@@ -109,6 +113,17 @@ void MainMenu::menuLogic() {
 
 }
 
+void MainMenu::drawMenu(RenderWindow& window) {
+	// Заменить на текстуры
+	window.clear(Color::White);
+	window.draw(menu);
+	for (int i = 0; i < menuBarNum; i++) {
+		window.draw(menuBar[i]);
+		window.draw(text[i]);
+	}
+	window.display();
+}
+
 void MainMenu::initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize) {
 	menuSize = _menuSize;
 	menuBarSize = _menuBarSize;
@@ -137,11 +152,14 @@ void MainMenu::initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize) {
 
 int MainMenu::invokeMenu(RenderWindow& window) {
 	// Доделать
+	choice = 0;
 	while (true) {
 		menuInput();
 		menuLogic();
-		if (choice) break;
+		if (choice) {
+			return choice;
+			break;
+		}
 		drawMenu(window);
 	}
-	return choice;
 }

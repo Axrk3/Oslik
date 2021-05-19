@@ -6,15 +6,23 @@ Engine::Engine() {
 
 	window.create(VideoMode(resolution.x, resolution.y), "Game Engine v0.2", Style::Fullscreen);
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
+	// Вынести в отдельный метод инициализации анимации через цикл у всех существ;
+	menu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
+	mainMenu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
+}
+
+void Engine::initialization() {
+	
 	offsetX = resolution.x / 2;
 	offsetY = resolution.y / 2;
-
-	// Вынести в отдельный метод инициализации анимации через цикл у всех существ;
 	lvl.loadLVL(std::string("maps/lvl.txt"));
 	player.initialize("testhero.png", lvl.map, lvl.blockSize, lvl.spawnPoint);
-	menu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
-	//mainMenu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
+
+	update(0);
+	draw();
+	sleep(milliseconds(100));
 }
+
 
 void Engine::input(Event event, float time) {
 	
@@ -68,7 +76,6 @@ void Engine::draw() {
 	window.setView(view);
 	lvl.draw(window, view);
 	player.animation.draw(window, player.hitBox.left, player.hitBox.top);
-	drawMenu();
 	window.display();
 }
 
@@ -90,21 +97,18 @@ void Engine::offset() {
 	}
 }
 
-void Engine::drawMenu() {
+int Engine::invokeGameMenu() {
 	if (menuIsOpen) {
-		menu.invokeMenu(window);
 		menuIsOpen = false;
+		if (menu.invokeMenu(window)) return 0;
 		clock.restart();
 	}
+	return 1;
 }
 
 void Engine::start() {
-	// Костылина
-	update(0);
-	draw();
-	sleep(milliseconds(500));
-	//
-	while (window.isOpen()) {
+	initialization();
+	while (true) {
 		time = clock.getElapsedTime().asSeconds();
 		clock.restart();
 		Event event;
@@ -120,18 +124,18 @@ void Engine::start() {
 				break;
 			}
 		}
+		if (invokeGameMenu() == 0) break;
 		update(time);
 		draw();
 	}
+	closeSession();
 }
 
-void Engine::load() {
-	player.update(0);
-	sleep(milliseconds(500));
+int Engine::startMainMenu() {
+	return mainMenu.invokeMenu(window);
 }
 
-/*int Engine::startMainMenu() {
-	mainMenu.drawMenu(window);
-	mainMenu.menuLogic();
-	return 0;
-}*/
+void Engine::closeSession() {
+	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
+	window.setView(view);
+}

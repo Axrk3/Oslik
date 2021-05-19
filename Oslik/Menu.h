@@ -16,8 +16,6 @@ protected:
 	virtual void drawMenu(RenderWindow& window) = 0;
 
 public:
-	// Временно флаг тут, переделать
-	bool closeMenu = false;
 	virtual void initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize) = 0;
 	virtual int invokeMenu(RenderWindow& window) = 0;
 };
@@ -27,6 +25,8 @@ protected:
 	void menuInput();
 	void menuLogic();
 	void drawMenu(RenderWindow& window);
+	bool closeMenu = false;
+	bool closeGame = false;
 public:
 	void initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize);
 	int invokeMenu(RenderWindow& window);

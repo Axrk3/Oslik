@@ -3,13 +3,15 @@
 
 int main() {
     Engine engine;
-    // Костылина та ещё, сделать главное меню другим классом 
-    //engine.startMainMenu();
-    /*do {
+    do {
         switch (engine.startMainMenu()) {
-        case 0: engine.start();
+        case 1: {
+            engine.start();
         }
-    } while (true);*/
-    engine.start();
+        // Настройки
+        // Сохранения
+        }
+    } while (true);
+    
     return 0;
 }

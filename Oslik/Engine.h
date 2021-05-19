@@ -20,19 +20,21 @@ public:
 	Player player;
 	Clock clock;
 	GameMenu menu;
-	//MainMenu mainMenu;
+	MainMenu mainMenu;
 	int offsetX, offsetY;
 	float time;
-	bool menuIsOpen = false;
+	bool menuIsOpen = false, closeGame = false;
+	void initialization();
 	void input(Event event, float time);
 	void draw();
 	void update(float time);
 	void offset();
-	void drawMenu();
-	void load();
+	int invokeGameMenu();
+	void loading();
+	void closeSession();
 public:
 	Engine();
 	void start();
-	//int startMainMenu();
+	int startMainMenu();
 };
 
