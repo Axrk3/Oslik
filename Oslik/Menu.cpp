@@ -52,7 +52,7 @@ void GameMenu::menuLogic() {
 	}
 }
 
-void GameMenu::drawMenu(RenderWindow& window) {
+void GameMenu::drawMenu(RenderWindow &window) {
 	// Заменить на текстуры
 	window.draw(menu);
 	for (int i = 0; i < menuBarNum; i++) {
@@ -113,7 +113,7 @@ void MainMenu::menuLogic() {
 
 }
 
-void MainMenu::drawMenu(RenderWindow& window) {
+void MainMenu::drawMenu(RenderWindow &window) {
 	// Заменить на текстуры
 	window.clear(Color::White);
 	window.draw(menu);
@@ -150,7 +150,7 @@ void MainMenu::initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize) {
 	text[1].setString("EXIT");
 }
 
-int MainMenu::invokeMenu(RenderWindow& window) {
+int MainMenu::invokeMenu(RenderWindow &window) {
 	// Доделать
 	choice = 0;
 	while (true) {

@@ -49,8 +49,10 @@ void Level::loadLVL(const string _fileName) {
         in >> line;
         in >> spawnPoint.x; in >> spawnPoint.y;
         // friend
-        in >> line;
-        in >> x; in >> y; in >> num;
+        /*in >> line;
+        in >> x; in >> y; in >> num;*/
+        
+        
         // createFriend(); è ò.ä.
     }
     in.close();

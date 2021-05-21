@@ -4,21 +4,16 @@
 
 class EnemyFactory {
 public:
-	virtual Enemy* createEnemy() = 0;
+	static Enemy* createEnemy(int x, int y, int id);
 	virtual ~EnemyFactory() {}
 };
 
-class SwordsmanFactory : public EnemyFactory {
-public:
-	Enemy* createEnemy(int _x, int _y);
+class EquipmentFactory {
+	static Equipment* createEquipment(int x, int y, int id);
+	virtual ~EquipmentFactory() {}
 };
 
-class FisterFactory : public EnemyFactory {
-public:
-	Enemy* createEnemy(int _x, int _y);
-};
-
-class BerserkFactory : public EnemyFactory {
-public:
-	Enemy* createEnemy(int _x, int _y);
+class ConsumableFactory {
+	static Consumable* createConsumable(int x, int y, int id);
+	virtual ~ConsumableFactory() {}
 };

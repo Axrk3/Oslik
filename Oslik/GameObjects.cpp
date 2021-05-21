@@ -2,6 +2,18 @@
 #include <iostream>
 
 
+void GameObject::setHitBox(FloatRect _hitBox) {
+	hitBox = _hitBox;
+}
+
+Sprite GameObject::getSprite() {
+	return this->sprite;
+}
+
+Character::characteristics Character::getStats() {
+	return this->stats;
+}
+
 void Player::initialize(String fileName,int** &_map, int _blockSize,Vector2f spawnPoint) {
 	map = _map;
 	blockSize = _blockSize;
@@ -72,10 +84,6 @@ void Player::gravity(float time) {
 	dy += g * time;
 }
 
-void GameObject::setHitBox(FloatRect _hitBox) {
-	hitBox = _hitBox;
-}
-
 void Player::collisionX() {
 	for (int i = hitBox.top / blockSize; i < (hitBox.top + hitBox.height) / blockSize; i++) {
 		for (int j = hitBox.left / blockSize; j < (hitBox.left + hitBox.width) / blockSize; j++) {
@@ -130,14 +138,8 @@ void Player::collisionY() {
 	inventory.input();
 }*/
 
-Consumable::Consumable() {
-	hitBox.height = hitBox.width = 64;
-	name = "";
-	maxQuantity = 0;
-}
-
-Sprite Consumable::getSpriteInInventory() {
-	return spriteInInventory;
+Sprite Item::getSpriteInInventory() {
+	return this->spriteInInventory;
 }
 
 Inventory::Inventory() {
@@ -191,30 +193,36 @@ void Inventory::open(RenderWindow& window) {
 	}
 }*/
 
-void Inventory::addItem(Equipment item) {
-
+int Enemy::getID() {
+	return id;
 }
 
-Swordsman::Swordsman(int _x, int _y) {
-	hitBox.left = _x;
-	hitBox.top = _y;
+Swordsman::Swordsman(int x, int y) {
+	hitBox.left = x;
+	hitBox.top = y;
 
-	texture.loadFromFile("");
+	id = 1;
+
+	texture.loadFromFile("Swordsman.png");
 	sprite.setTexture(texture);
 }
 
-Fister::Fister(int _x, int _y) {
-	hitBox.left = _x;
-	hitBox.top = _y;
+Fister::Fister(int x, int y) {
+	hitBox.left = x;
+	hitBox.top = y;
 
-	texture.loadFromFile("");
+	id = 2;
+
+	texture.loadFromFile("Fister.png");
 	sprite.setTexture(texture);
 }
 
-Berserk::Berserk(int _x, int _y) {
-	hitBox.left = _x;
-	hitBox.top = _y;
+Berserk::Berserk(int x, int y) {
+	hitBox.left = x;
+	hitBox.top = y;
 
-	texture.loadFromFile("");
+	id = 3;
+
+	texture.loadFromFile("Berserk.png");
 	sprite.setTexture(texture);
 }

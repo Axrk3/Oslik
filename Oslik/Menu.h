@@ -6,7 +6,7 @@ using namespace sf;
 class Menu {
 protected:
 	Vector2f menuSize, menuBarSize, mousePosition, Offset, menuPosition;
-	RectangleShape menu, * menuBar;
+	RectangleShape menu, *menuBar;
 	int menuBarNum, currentBar = 0;
 	Font font;
 	Text* text;
@@ -17,19 +17,19 @@ protected:
 
 public:
 	virtual void initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize) = 0;
-	virtual int invokeMenu(RenderWindow& window) = 0;
+	virtual int invokeMenu(RenderWindow &window) = 0;
 };
 
 class GameMenu : public Menu {
 protected:
 	void menuInput();
 	void menuLogic();
-	void drawMenu(RenderWindow& window);
+	void drawMenu(RenderWindow &window);
 	bool closeMenu = false;
 	bool closeGame = false;
 public:
 	void initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize);
-	int invokeMenu(RenderWindow& window);
+	int invokeMenu(RenderWindow &window);
 	void updateMenu(Vector2f _menuPosition);
 };
 
@@ -39,8 +39,8 @@ protected:
 
 	void menuInput();
 	void menuLogic();
-	void drawMenu(RenderWindow& window);
+	void drawMenu(RenderWindow &window);
 public:
 	void initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize);
-	int invokeMenu(RenderWindow& window);
+	int invokeMenu(RenderWindow &window);
 };

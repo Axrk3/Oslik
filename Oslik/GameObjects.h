@@ -17,25 +17,65 @@ public:
 };
 
 class Item : public GameObject {
-public:
+protected:
+	String name;
+	int coefficient;
 	Texture textureInInventory;
 	Sprite spriteInInventory;
+public:
+	Item(String _name, int _coefficient) {
+		name = _name;
+		coefficient = _coefficient;
+	}
+	Sprite getSpriteInInventory();
 };
-
 
 class Equipment : public Item {
 public:
+	Equipment(String _name, int _coefficient) : Item(_name, _coefficient) {};
+	//virtual void putOn();
+};
+
+class Helmet : public Equipment {
+public:
+	Helmet(String _name, int _coefficient) : Equipment(_name, _coefficient) {};
+	void putOn();
+};
+
+class Saddle : public Equipment {
+public:
+	Saddle(String _name, int _coefficient) : Equipment(_name, _coefficient) {};
+	void putOn();
+};
+
+class Horseshoe : public Equipment {
+public:
+	Horseshoe(String _name, int _coefficient) : Equipment(_name, _coefficient) {};
 	void putOn();
 };
 
 class Consumable : public Item {
 public:
-	String name;
-	int maxQuantity;
-public:
-	Consumable();
+	Consumable(String _name, int _coefficient) : Item(_name, _coefficient) {};
+	//virtual void consume();
+};
+
+class HealthPotion : public Consumable {
+public: 
+	HealthPotion(String _name, int _coefficient) : Consumable(_name, _coefficient) {};
 	void consume();
-	Sprite getSpriteInInventory();
+};
+
+class StrengthPotion : public Consumable {
+public:
+	StrengthPotion(String _name, int _coefficient) : Consumable(_name, _coefficient) {};
+	void consume();
+};
+
+class ResistancePotion : public Consumable {
+public:
+	ResistancePotion(String _name, int _coefficient) : Consumable(_name, _coefficient) {};
+	void consume();
 };
 
 class Cell {
@@ -55,7 +95,7 @@ public:
 public:
 	Inventory();
 	void open(RenderWindow &window);
-	void addItem(Consumable& item);
+	void addItem(Consumable &item);
 	void addItem(Equipment item);
 };
 
@@ -64,7 +104,6 @@ public:
 	AnimationManager animation;
 	struct characteristics {
 		int HP,
-			MP,
 			ATK,
 			DEF,
 			Level,
@@ -103,23 +142,23 @@ class Friend : public GameObject {
 };
 
 class Enemy : public Character {
-	
+protected:
+	int id;
+public:
+	int getID();
 };
 
 class Swordsman : public Enemy {
-
 public:
-	Swordsman(int _x, int _y);
+	Swordsman(int x, int y);
 };
 
 class Fister : public Enemy {
-
 public:
-	Fister(int _x, int _y);
+	Fister(int x, int y);
 };
 
 class Berserk : public Enemy {
-
 public:
-	Berserk(int _x, int _y);
+	Berserk(int x, int y);
 };
