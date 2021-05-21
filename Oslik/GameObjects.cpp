@@ -7,11 +7,11 @@ void GameObject::setHitBox(FloatRect _hitBox) {
 }
 
 Sprite GameObject::getSprite() {
-	return this->sprite;
+	return sprite;
 }
 
 Character::characteristics Character::getStats() {
-	return this->stats;
+	return stats;
 }
 
 void Player::initialize(String fileName,int** &_map, int _blockSize,Vector2f spawnPoint) {
@@ -139,7 +139,7 @@ void Player::collisionY() {
 }*/
 
 Sprite Item::getSpriteInInventory() {
-	return this->spriteInInventory;
+	return spriteInInventory;
 }
 
 Inventory::Inventory() {

@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "GameObjects.h"
 #include "Level.h"
+#include "Battle.h"
 #include <iostream>
 #include <string>
 #include "Menu.h"

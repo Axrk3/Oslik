@@ -5,7 +5,6 @@ Battle::Battle(Player &_player, RenderWindow &_window) {
 
 	resolution.x = VideoMode::getDesktopMode().width;
 	resolution.y = VideoMode::getDesktopMode().height;
-
 	battleView.reset(FloatRect(0, 0, resolution.x, resolution.y));
 
 	window = &_window;
@@ -26,6 +25,7 @@ void Battle::battleStart(Enemy *enemy) {
 
 		cursorSprite.setPosition(currentPosition);
 		input();
+		actionProcessing();
 		cursorSprite.setPosition(currentPosition);
 
 		if (isAction) {
@@ -106,16 +106,16 @@ void Battle::enemyInitialization(Enemy *enemy) {
 
 void Battle::enemyCoordinatesSet() {
 	if (enemies.size() == 1) {
-		enemies.front()->getSprite().setPosition(1536, 540);
+		enemies.front()->sprite.setPosition(1536, 540);
 	}
 	else if (enemies.size() == 2) {
-		enemies.front()->getSprite().setPosition(1416, 270);
-		enemies.back()->getSprite().setPosition(1656, 810);
+		enemies.front()->sprite.setPosition(1416, 270);
+		enemies.back()->sprite.setPosition(1656, 810);
 	}
 	else {
-		enemies.at(0)->getSprite().setPosition(1416, 270);
-		enemies.at(1)->getSprite().setPosition(1536, 540);
-		enemies.at(2)->getSprite().setPosition(1656, 810);
+		enemies.at(0)->sprite.setPosition(1416, 270);
+		enemies.at(1)->sprite.setPosition(1536, 540);
+		enemies.at(2)->sprite.setPosition(1656, 810);
 	}
 }
 

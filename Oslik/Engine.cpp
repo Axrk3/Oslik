@@ -51,7 +51,6 @@ void Engine::input(Event event, float time) {
 		if (event.key.code == (Keyboard::I)) {
 			// Наверно через это будет реализован инвентарь -_- (Максим привет!)
 		}
-
 	}
 
 	else if (event.type == Event::KeyReleased) {
