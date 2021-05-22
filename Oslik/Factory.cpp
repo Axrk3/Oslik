@@ -18,40 +18,48 @@ Enemy* EnemyFactory::createEnemy(int x, int y, int id) {
 	return newEnemy;
 }
 
-Equipment* EquipmentFactory::createEquipment(int x, int y, int id) {
-	Equipment* newEquipment;
+/*Friend* FriendFactory::createFriend(int x, int y, int id) {
+	Friend* newFriend;
+
+	switch (id) {
+	case 1:
+		newFriend = new (x, y);
+		break;
+	case 2:
+		newFriend = new (x, y);
+		break;
+	default:
+		newFriend = new (x, y);
+		break;
+	}
+
+	return newFriend;
+}*/
+
+Item* ItemFactory::createItem(int x, int y, int id) {
+	Item* newItem;
 
 	switch (id)
 	{
 	case 1:
-		newEquipment = new Helmet("Helmet", 3);
+		newItem = new Helmet("Helmet", 3);
 		break;
 	case 2:
-		newEquipment = new Saddle("Saddle", 5);
+		newItem = new Saddle("Saddle", 5);
+		break;
+	case 3:
+		newItem = new Horseshoe("Horseshoe", 2);
+		break;
+	case 4:
+		newItem = new HealthPotion("HealthPotion", 10);
+		break;
+	case 5:
+		newItem = new StrengthPotion("StrengthPotion", 1);
 		break;
 	default:
-		newEquipment = new Horseshoe("Horseshoe", 2);
+		newItem = new ResistancePotion("ResistancePotion", 1);
 		break;
 	}
 
-	return newEquipment;
-}
-
-Consumable* ConsumableFactory::createConsumable(int x, int y, int id) {
-	Consumable* newConsumable;
-
-	switch (id)
-	{
-	case 1:
-		newConsumable = new HealthPotion("HealthPotion", 10);
-		break;
-	case 2:
-		newConsumable = new StrengthPotion("StrengthPotion", 1);
-		break;
-	default:
-		newConsumable = new ResistancePotion("ResistancePotion", 1);
-		break;
-	}
-	
-	return newConsumable;
+	return newItem;
 }

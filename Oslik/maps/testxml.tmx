@@ -39,13 +39,7 @@
   <object id="18" gid="105" x="474" y="536" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="7" name="FRIEND">
-  <object id="26" x="810" y="682">
-   <properties>
-    <property name="num" type="int" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="27" x="892" y="674">
+  <object id="27" x="1854" y="710">
    <properties>
     <property name="num" type="int" value="1"/>
    </properties>
@@ -53,20 +47,20 @@
   </object>
  </objectgroup>
  <objectgroup id="8" name="ENEMY">
-  <object id="31" x="962" y="608" width="124" height="80">
+  <object id="31" x="1172" y="546" width="124" height="80">
    <properties>
-    <property name="num" type="int" value="33"/>
+    <property name="num" type="int" value="1"/>
    </properties>
    <ellipse/>
   </object>
  </objectgroup>
  <objectgroup id="9" name="ITEM">
-  <object id="28" x="642" y="636" width="48" height="32">
+  <object id="28" x="1492" y="694" width="48" height="32">
    <properties>
-    <property name="num" type="int" value="10"/>
+    <property name="num" type="int" value="1"/>
    </properties>
   </object>
-  <object id="29" x="722" y="506" width="48" height="32">
+  <object id="29" x="88" y="532" width="48" height="32">
    <properties>
     <property name="num" type="int" value="5"/>
    </properties>

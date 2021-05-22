@@ -8,12 +8,14 @@ public:
 	virtual ~EnemyFactory() {}
 };
 
-class EquipmentFactory {
-	static Equipment* createEquipment(int x, int y, int id);
-	virtual ~EquipmentFactory() {}
+class FriendFactory {
+public:
+	static Enemy* createFriend(int x, int y, int id);
+	virtual ~FriendFactory() {}
 };
 
-class ConsumableFactory {
-	static Consumable* createConsumable(int x, int y, int id);
-	virtual ~ConsumableFactory() {}
+class ItemFactory {
+public:
+	static Item* createItem(int x, int y, int id);
+	virtual ~ItemFactory() {}
 };

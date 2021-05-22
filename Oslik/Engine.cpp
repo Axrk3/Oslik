@@ -137,4 +137,5 @@ int Engine::startMainMenu() {
 void Engine::closeSession() {
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
 	window.setView(view);
+	lvl.clear();
 }

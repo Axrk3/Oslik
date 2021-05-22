@@ -24,11 +24,15 @@ public:
 	int tileSetWidth,blockSize;
 	int** map;
 	std::string fileName;
+	void calculateTile(int tileID);
+	void drawMap(RenderWindow& window, View view);
+	void drawBackground(RenderWindow& window, View view);
+	void drawEnemies(RenderWindow& window, View view);
+	void drawFriends(RenderWindow& window, View view);
+	void drawItems(RenderWindow& window, View view);
 public:
 	void loadLVL(const std::string fileName);
-	void drawMap(RenderWindow &window, View view);
-	void drawBackground(RenderWindow &window, View view);
 	void draw(RenderWindow& window, View view);
-	void calculateTile(int tileID);
 	void worldUpdate();
+	void clear();
 };

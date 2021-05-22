@@ -10,11 +10,19 @@ Sprite GameObject::getSprite() {
 	return sprite;
 }
 
+FloatRect GameObject::getHitBox() {
+	return hitBox;
+}
+
 Character::characteristics Character::getStats() {
 	return stats;
 }
 
 void Player::initialize(String fileName,int** &_map, int _blockSize,Vector2f spawnPoint) {
+	// Часть выкинуть в конструктор и сделать метод для смены карты
+	stats.HP = 100;
+	stats.ATK = 40;
+	stats.DEF = 10;
 	map = _map;
 	blockSize = _blockSize;
 	texture.loadFromFile(fileName);
@@ -22,7 +30,6 @@ void Player::initialize(String fileName,int** &_map, int _blockSize,Vector2f spa
 	animation.create("stay", texture, 0, 0, 210, 160, 8, 5, 210);
 	animation.set("stay");
 	animation.play();
-	// Переделать хитбокс при помощи инициализации и задать спавнпоинт из уровня
 	hitBox = FloatRect(spawnPoint, Vector2f(200, 160));
 	running = false;
 }
@@ -200,21 +207,31 @@ int Enemy::getID() {
 Swordsman::Swordsman(int x, int y) {
 	hitBox.left = x;
 	hitBox.top = y;
+	hitBox.width = 150;
+	hitBox.height = 192;
 
 	id = 1;
 
 	texture.loadFromFile("Swordsman.png");
 	sprite.setTexture(texture);
+	sprite.setPosition(hitBox.left, hitBox.top);
 }
 
 Fister::Fister(int x, int y) {
 	hitBox.left = x;
 	hitBox.top = y;
+	hitBox.width = 150;
+	hitBox.height = 192;
+
+	stats.HP = 50;
+	stats.ATK = 20;
+	stats.DEF = 5;
 
 	id = 2;
 
 	texture.loadFromFile("Fister.png");
 	sprite.setTexture(texture);
+	sprite.setPosition(hitBox.left, hitBox.top);
 }
 
 Berserk::Berserk(int x, int y) {

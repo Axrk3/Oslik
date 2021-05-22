@@ -13,8 +13,7 @@ void Level::loadLVL(const string _fileName) {
     fileName = _fileName;
 
     ifstream in(_fileName);
-    if (in.is_open())
-    {
+    if (in.is_open()) {
         getline(in, line);
         in >> mapSize.x; in >> mapSize.y;
         map = new int* [mapSize.y];
@@ -48,12 +47,31 @@ void Level::loadLVL(const string _fileName) {
         // spawnpoint
         in >> line;
         in >> spawnPoint.x; in >> spawnPoint.y;
-        // friend
-        /*in >> line;
-        in >> x; in >> y; in >> num;*/
-        
-        
-        // createFriend(); è ò.ä.
+        // Friends
+        in >> line;
+        while (true) {
+            in >> x;
+            if (x == -1) break;
+            in >> y; in >> num;
+            //friends.push_back(*EnemyFactory::createFriend(x, y, num));
+        }
+        // Enemies
+        in >> line;
+        while (true) {
+            in >> x;
+            if (x == -1) break;
+            in >> y; in >> num;
+            enemies.push_back(*EnemyFactory::createEnemy(x, y, num));
+        }
+        // Items
+        in >> line;
+        while (true) {
+            in >> x;
+            if (x == -1) break;
+            in >> y; in >> num;
+            items.push_back(*ItemFactory::createItem(x, y, num));
+        }
+    
     }
     in.close();
 }
@@ -71,10 +89,13 @@ void Level::calculateTile(int tileID) {
 
 void Level::drawMap(RenderWindow &window, View view) {
     // resolution.x/2 = 960, resolution.y/2 = 540, blockSize = 64;
-    for (int i = (view.getCenter().y - 540) / 64 < 0 ? 0 : (view.getCenter().y - 540) / 64;
-        i < ((view.getCenter().y + 540) / 64 > mapSize.y ? mapSize.y : (view.getCenter().y + 540) / 64); i++) {
-        for (int j = (view.getCenter().x - 960) / 64 < 0 ? 0 : (view.getCenter().x - 960) / 64;
-            j < ((view.getCenter().x + 960) / 64 > mapSize.x ? mapSize.x : (view.getCenter().x + 960) / 64); j++) {
+    Vector2f viewCord;
+    viewCord.x = view.getCenter().x;
+    viewCord.y = view.getCenter().y;
+    for (int i = (viewCord.y - 540) / 64 < 0 ? 0 : (viewCord.y - 540) / 64;
+        i < ((viewCord.y + 540) / 64 > mapSize.y ? mapSize.y : (viewCord.y + 540) / 64); i++) {
+        for (int j = (viewCord.x - 960) / 64 < 0 ? 0 : (viewCord.x - 960) / 64;
+            j < ((viewCord.x + 960) / 64 > mapSize.x ? mapSize.x : (viewCord.x + 960) / 64); j++) {
             if (map[i][j] == 0) continue;
             calculateTile(map[i][j]);
             tile.setPosition(j * blockSize, i * blockSize);
@@ -88,11 +109,75 @@ void Level::drawBackground(RenderWindow& window,View view) {
     window.draw(backgroundSprite);
 }
 
+void Level::drawEnemies(RenderWindow& window, View view) {
+    Vector2f enemyCord, viewCord;
+    int enemyWidth, enemyHeight;
+    viewCord.x = view.getCenter().x;
+    viewCord.y = view.getCenter().y;
+    for (int i = 0; i < enemies.size(); i++) {
+        enemyCord.x = enemies.at(i).getHitBox().left; enemyCord.y = enemies.at(i).getHitBox().top;
+        enemyWidth = enemies.at(i).getHitBox().width; enemyHeight = enemies.at(i).getHitBox().height;
+        if (enemyCord.x > viewCord.x - 960 - enemyWidth &&
+            enemyCord.x < (viewCord.x + 960)) {
+            if (enemyCord.y > viewCord.y - 540 - enemyHeight &&
+                enemyCord.y < (viewCord.y + 540)) {
+                window.draw(enemies.at(i).getSprite());
+            }
+        }
+    }
+}
+
+void Level::drawFriends(RenderWindow& window, View view) {
+    Vector2f friendCord, viewCord;
+    int friendWidth, friendHeight;
+    viewCord.x = view.getCenter().x;
+    viewCord.y = view.getCenter().y;
+    for (int i = 0; i < friends.size(); i++) {
+        friendCord.x = friends.at(i).getHitBox().left; friendCord.y = friends.at(i).getHitBox().top;
+        friendWidth = friends.at(i).getHitBox().width; friendHeight = friends.at(i).getHitBox().height;
+        if (friendCord.x > viewCord.x - 960 - friendWidth &&
+            friendCord.x < (viewCord.x + 960)) {
+            if (friendCord.y > viewCord.y - 540 - friendHeight &&
+                friendCord.y < (viewCord.y + 540)) {
+                window.draw(friends.at(i).getSprite());
+            }
+        }
+    }
+}
+
+void Level::drawItems(RenderWindow& window, View view) {
+    Vector2f itemCord, viewCord;
+    int itemWidth, itemHeight;
+    viewCord.x = view.getCenter().x;
+    viewCord.y = view.getCenter().y;
+    for (int i = 0; i < enemies.size(); i++) {
+        itemCord.x = enemies.at(i).getHitBox().left; itemCord.y = enemies.at(i).getHitBox().top;
+        itemWidth = enemies.at(i).getHitBox().width; itemHeight = enemies.at(i).getHitBox().height;
+        if (itemCord.x > viewCord.x - 960 - itemWidth &&
+            itemCord.x < (viewCord.x + 960)) {
+            if (itemCord.y > viewCord.y - 540 - itemHeight &&
+                itemCord.y < (viewCord.y + 540)) {
+                window.draw(enemies.at(i).getSprite());
+            }
+        }
+    }
+}
+
 void Level::draw(RenderWindow& window, View view) {
     drawBackground(window, view);
+    drawEnemies(window, view);
+    //drawFriends(window, view);
+    //drawItems(window,view);
     drawMap(window,view);
 }
 
 void Level::worldUpdate() {
 
+}
+
+void Level::clear() {
+    friends.clear();
+    items.clear();
+    enemies.clear();
+    delete (map);
 }
