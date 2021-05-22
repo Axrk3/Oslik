@@ -63,6 +63,7 @@ void GameMenu::drawMenu(RenderWindow &window) {
 }
 
 int GameMenu::invokeMenu(RenderWindow &window) {
+
 	while (true) {
 		menuInput();
 		menuLogic();
@@ -76,6 +77,7 @@ int GameMenu::invokeMenu(RenderWindow &window) {
 		}
 		drawMenu(window);
 	}
+
 }
 
 void GameMenu::updateMenu(Vector2f _menuPosition) {
@@ -151,6 +153,7 @@ void MainMenu::initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize) {
 }
 
 int MainMenu::invokeMenu(RenderWindow &window) {
+
 	// Доделать
 	choice = 0;
 	while (true) {

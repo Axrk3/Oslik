@@ -38,16 +38,16 @@ void Player::initialize(String fileName,int** &_map, int _blockSize,Vector2f spa
 
 }
 
-void Player::update(float time) {
+void Player::update(float time,Vector2f viewCenter) {
 	hitBox.left += dx * time;
 	collisionX();
-
+	
 	hitBox.top += dy * time;
 	gravity(time);
 	collisionY();
 
 	animation.tick(time);
-
+	inventory.update(viewCenter);
 	sprite.setPosition(hitBox.left, hitBox.top);
 }
 
@@ -144,11 +144,6 @@ void Player::collisionY() {
 	}
 }
 
-/*void Player::openInventory(Window& window) {
-	inventory.open(window);
-	inventory.input();
-}*/
-
 void Player::openInventory(RenderWindow &window) {
 
 }
@@ -199,15 +194,16 @@ Inventory::Inventory() {
 	}*/
 }
 
-void Inventory::open(RenderWindow& window) {
-	RectangleShape r;
-	r.setSize(Vector2f(500, 500));
-	r.setPosition(Vector2f(100, 100));
-	r.setFillColor(Color::White);
-	while (true) {
-	window.draw(r);
-	window.display();
-	if (Keyboard::isKeyPressed(Keyboard::C)) break;
+void Inventory::update(Vector2f viewCenter) {
+	sprite.setPosition(viewCenter.x - 480, viewCenter.y - 270);
+}
+
+void Inventory::draw(RenderWindow& window) {
+	window.draw(sprite);
+	window.draw(attackBar);
+	window.draw(hpBar);
+	for (int i = 0; i < 8; i++) {
+		if (!consumable[i].isEmpty) window.draw(consumable[i].item->getSprite());
 	}
 }
 

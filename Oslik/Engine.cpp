@@ -4,7 +4,9 @@ Engine::Engine() {
 	resolution.x = VideoMode::getDesktopMode().width;
 	resolution.y = VideoMode::getDesktopMode().height;
 
-	window.create(VideoMode(resolution.x, resolution.y), "Game Engine v0.2", Style::Fullscreen);
+	window.create(VideoMode(resolution.x, resolution.y), "OslikTheGame v0.9", Style::Fullscreen);
+	window.setFramerateLimit(60);
+
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
 	// Вынести в отдельный метод инициализации анимации через цикл у всех существ;
 	menu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
@@ -12,7 +14,7 @@ Engine::Engine() {
 }
 
 void Engine::initialization() {
-	
+	window.setMouseCursorVisible(false);
 	offsetX = resolution.x / 2;
 	offsetY = resolution.y / 2;
 	lvl.loadLVL(std::string("maps/lvl.txt"), player, window);
@@ -31,6 +33,7 @@ void Engine::input(Event event, float time) {
 
 		if (event.key.code == (Keyboard::Escape)) {
 			menuIsOpen = true;
+			window.setMouseCursorVisible(menuIsOpen);
 		}
 
 		if (event.key.code == (Keyboard::A)) {
@@ -50,7 +53,8 @@ void Engine::input(Event event, float time) {
 		}
 
 		if (event.key.code == (Keyboard::I)) {
-			// Наверно через это будет реализован инвентарь -_- (Максим привет!)
+			inventoryIsOpen = !inventoryIsOpen;
+			window.setMouseCursorVisible(inventoryIsOpen);
 		}
 	}
 
@@ -76,12 +80,19 @@ void Engine::draw() {
 	window.setView(view);
 	lvl.draw(window, view);
 	player.animation.draw(window, player.hitBox.left, player.hitBox.top);
+	drawInventory();
 	window.display();
+}
+
+void Engine::drawInventory() {
+	if (inventoryIsOpen) {
+		player.inventory.draw(window);
+	}
 }
 
 void Engine::update(float time) {
 	lvl.worldUpdate(player, clock);
-	player.update(time);
+	player.update(time, view.getCenter());
 	offset();
 	view.setCenter(offsetX, offsetY);
 	menu.updateMenu(view.getCenter());
@@ -99,8 +110,10 @@ void Engine::offset() {
 
 int Engine::invokeGameMenu() {
 	if (menuIsOpen) {
+		window.setMouseCursorVisible(true);
 		menuIsOpen = false;
 		if (menu.invokeMenu(window)) return 0;
+		window.setMouseCursorVisible(false);
 		clock.restart();
 	}
 	return 1;
@@ -132,7 +145,9 @@ void Engine::start() {
 }
 
 int Engine::startMainMenu() {
+	window.setMouseCursorVisible(true);
 	return mainMenu.invokeMenu(window);
+	window.setMouseCursorVisible(false);
 }
 
 void Engine::closeSession() {

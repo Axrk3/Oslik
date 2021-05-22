@@ -94,9 +94,10 @@ public:
 
 public:
 	Inventory();
-	void open(RenderWindow &window);
+	void draw(RenderWindow &window);
 	void addItem(Consumable &item);
 	void addItem(Equipment item);
+	void update(Vector2f viewCenter);
 };
 
 class Character : public GameObject {
@@ -124,7 +125,7 @@ public:
 public:
 	Player() {}
 	void initialize(String fileName, int**& map, int blockSize, Vector2f spawnPoint);
-	void update(float time);
+	void update(float time,Vector2f viewCenter);
 	void moveLeft(float time);
 	void moveRight(float time);
 	void jump();

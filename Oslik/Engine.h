@@ -24,7 +24,7 @@ public:
 	MainMenu mainMenu;
 	int offsetX, offsetY;
 	float time;
-	bool menuIsOpen = false, closeGame = false;
+	bool menuIsOpen = false, inventoryIsOpen, closeGame = false;
 	void initialization();
 	void input(Event event, float time);
 	void draw();
@@ -33,6 +33,7 @@ public:
 	int invokeGameMenu();
 	void loading();
 	void closeSession();
+	void drawInventory();
 public:
 	Engine();
 	void start();
