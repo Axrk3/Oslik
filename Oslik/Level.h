@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "GameObjects.h"
 #include "Factory.h"
+#include "Battle.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -18,6 +19,8 @@ public:
 	RectangleShape tile;
 	Vector2i mapSize,tileIDcord;
 	Vector2f resolution, spawnPoint;
+	Battle battle;
+	Player player;
 	std::vector <Item> items;
 	std::vector <Friend> friends;
 	std::vector <Enemy> enemies;
@@ -31,7 +34,7 @@ public:
 	void drawFriends(RenderWindow& window, View view);
 	void drawItems(RenderWindow& window, View view);
 public:
-	void loadLVL(const std::string fileName);
+	void loadLVL(const std::string fileName, Player &_player, RenderWindow &window);
 	void draw(RenderWindow& window, View view);
 	void worldUpdate();
 	void clear();

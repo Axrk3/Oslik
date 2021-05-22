@@ -7,10 +7,13 @@ Level::Level() {
     resolution.y = VideoMode::getDesktopMode().height;
 }
 
-void Level::loadLVL(const string _fileName) {
+void Level::loadLVL(const string _fileName, Player &_player, RenderWindow &window) {
     string line,path = "maps/";
     int x, y, num;
     fileName = _fileName;
+
+    player = _player;
+    battle.create(_player, window);
 
     ifstream in(_fileName);
     if (in.is_open()) {
@@ -104,7 +107,7 @@ void Level::drawMap(RenderWindow &window, View view) {
     }
 }
 
-void Level::drawBackground(RenderWindow& window,View view) {
+void Level::drawBackground(RenderWindow &window, View view) {
     backgroundSprite.setPosition(view.getCenter().x - resolution.x / 2,view.getCenter().y - resolution.y / 2);
     window.draw(backgroundSprite);
 }
@@ -172,7 +175,11 @@ void Level::draw(RenderWindow& window, View view) {
 }
 
 void Level::worldUpdate() {
-
+    for (int i = 0; i < enemies.size(); i++) {
+        if (enemies.at(i).playerIntersection(player)) {
+            battle.start(enemies.at(i));
+        }
+    }
 }
 
 void Level::clear() {
