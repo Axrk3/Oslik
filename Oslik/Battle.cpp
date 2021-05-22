@@ -8,14 +8,15 @@ Battle::Battle() {
 }
 
 void Battle::create(Player &_player, RenderWindow &_window) {
-	player = _player;
+	player = &_player;
 	window = &_window;
 }
 
-void Battle::start(Enemy enemy) {
+void Battle::start(Enemy &enemy) {
 	objectsInitialization(enemy);
+	exitFlag = false;
 
-	while (player.getStats().HP >= 0 && !enemies.empty()) {
+	while (player->getStats().HP >= 0 && !enemies.empty() && !exitFlag) {
 		draw();
 
 		cursorSprite.setPosition(currentPosition);
@@ -25,11 +26,11 @@ void Battle::start(Enemy enemy) {
 
 		if (isAction) {
 			for (int i = 0; i < enemies.size(); i++) {
-				attack(*enemies.at(i), player, -20, (i == 1) ? 0 : i ? -1 : 1);
+				attack(*enemies.at(i), *player, -20, (i == 1) ? 0 : i ? -1 : 1);
 			}
 
 			if (isBlocked) {
-				defenceDown(player);
+				defenceDown(*player);
 				isBlocked = false;
 			}
 
@@ -38,9 +39,10 @@ void Battle::start(Enemy enemy) {
 
 		window->display();
 	}
+	enemies.clear();
 }
 
-void Battle::objectsInitialization(Enemy enemy) {
+void Battle::objectsInitialization(Enemy &enemy) {
 	menuInitialization();
 	cursorInitialization();
 	playerInitialization();
@@ -50,7 +52,7 @@ void Battle::objectsInitialization(Enemy enemy) {
 void Battle::menuInitialization() {
 	menuTexture.loadFromFile("menu.png");
 	menuSprite.setTexture(menuTexture);
-	menuSprite.setPosition(384, 810);
+	menuSprite.setPosition(resolution.x / 4, 3 * resolution.y / 4);
 
 	barSize.x = 219;
 	barSize.y = 91;
@@ -72,7 +74,7 @@ void Battle::hpBarInitialization() {
 	hpBarSize.x = 199;
 	hpBarSize.y = 44;
 
-	hpModifier = hpBarSize.x / player.stats.HP;
+	hpModifier = hpBarSize.x / player->stats.HP;
 
 	hpBar.setPosition(menuSprite.getPosition().x + 698, menuSprite.getPosition().y + 61);
 	hpBar.setSize(hpBarSize);
@@ -89,16 +91,16 @@ void Battle::cursorInitialization() {
 }
 
 void Battle::playerInitialization() {
-	player.getSprite().setPosition(384, 540);
+	player->sprite.setPosition(384, 540);
 }
 
-void Battle::enemyInitialization(Enemy enemy) {
+void Battle::enemyInitialization(Enemy &enemy) {
 	enemies.push_back(&enemy);
 
 	if (randomGenerator(40)) {
 		enemies.push_back(EnemyFactory::createEnemy(0, 0, enemy.getID()));
 
-		if (randomGenerator(30)) {
+		if (randomGenerator(20)) {
 			enemies.push_back(EnemyFactory::createEnemy(0, 0, enemy.getID()));
 		}
 	}
@@ -150,13 +152,49 @@ void Battle::input() {
 	currentPosition.y = barHitBox[(action.x + 2 * action.y)].getPosition().y;
 }
 
-void Battle::attack(Character& attacker, Character& defender, int speedX, int speedY) {
+void Battle::attack(Player& attacker, Enemy& defender, int speedX, int speedY) {
 	Vector2f offset;
-	offset.x = speedX * 0.05;
-	offset.y = speedY * 0.1;
+	offset.x = speedX * 0.33;
+	offset.y = speedY * 1.3;
 	int step = 0;
 
-	while (attacker.sprite.getPosition().x != defender.sprite.getPosition().x) {
+	while (attacker.sprite.getPosition().x <= defender.sprite.getPosition().x) {
+		attacker.sprite.move(offset);
+		step++;
+
+		draw();
+		window->display();
+	}
+
+
+
+	if (attacker.stats.ATK > defender.stats.DEF)
+		defender.stats.HP -= (attacker.stats.ATK - defender.stats.DEF);
+
+	if (defender.getStats().HP <= 0) {
+		for (int i = 0; i < enemies.size(); i++) {
+			if (enemies.at(i) == &defender) {
+				enemies.erase(enemies.begin() + i);
+			}
+		}
+	}
+
+	while (step) {
+		attacker.sprite.move(-offset);
+		step--;
+
+		draw();
+		window->display();
+	}
+}
+
+void Battle::attack(Enemy& attacker, Player& defender, int speedX, int speedY) {
+	Vector2f offset;
+	offset.x = speedX * 0.33;
+	offset.y = speedY * 1.3;
+	int step = 0;
+
+	while (attacker.sprite.getPosition().x >= defender.sprite.getPosition().x) {
 		attacker.sprite.move(offset);
 		step++;
 
@@ -193,7 +231,7 @@ int Battle::chooseEnemy() {
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Down)) {
-			if (choice != 2) {
+			if (choice != enemies.size() - 1) {
 				choice++;
 			}
 		}
@@ -215,21 +253,21 @@ void Battle::actionProcessing() {
 		switch (action.x + 2 * action.y) {
 		case 0:
 			choice = chooseEnemy();
-			attack(player, *enemies.at(choice), 20, (choice == 1) ? 0 : choice ? 1 : -1);
+			attack(*player, *enemies.at(choice), 20, (choice == 1) ? 0 : choice ? 1 : -1);
+			isAction = true;
 			break;
 		case 1:
-			defenceUp(player);
+			defenceUp(*player);
+			isAction = true;
 			isBlocked = true;
 			break;
 		case 2:
-
+			isAction = true;
 			break;
 		case 3:
-			exit(0);
+			exitFlag = true;
 			break;
 		}
-
-		isAction = true;
 	}
 }
 
@@ -244,12 +282,12 @@ void Battle::defenceDown(Character& defender) {
 void Battle::draw() {
 	window->clear(Color::White);
 
-	window->draw(player.getSprite());
+	window->draw(player->getSprite());
 	for (int i = 0; i < enemies.size(); i++) {
 		window->draw(enemies.at(i)->getSprite());
 	}
 
-	hpBarSize.x = player.stats.HP * hpModifier;
+	hpBarSize.x = player->stats.HP * hpModifier;
 	hpBar.setSize(hpBarSize);
 
 	window->draw(menuSprite);

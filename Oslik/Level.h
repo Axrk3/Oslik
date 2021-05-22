@@ -20,7 +20,7 @@ public:
 	Vector2i mapSize,tileIDcord;
 	Vector2f resolution, spawnPoint;
 	Battle battle;
-	Player player;
+	
 	std::vector <Item> items;
 	std::vector <Friend> friends;
 	std::vector <Enemy> enemies;
@@ -36,6 +36,6 @@ public:
 public:
 	void loadLVL(const std::string fileName, Player &_player, RenderWindow &window);
 	void draw(RenderWindow& window, View view);
-	void worldUpdate();
+	void worldUpdate(Player& player, Clock &clock);
 	void clear();
 };

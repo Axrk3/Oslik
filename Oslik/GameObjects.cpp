@@ -26,12 +26,16 @@ void Player::initialize(String fileName,int** &_map, int _blockSize,Vector2f spa
 	map = _map;
 	blockSize = _blockSize;
 	texture.loadFromFile(fileName);
-	animation.create("walk", texture, 0, 160, 212, 160, 8, 8, 212);
-	animation.create("stay", texture, 0, 0, 210, 160, 8, 5, 210);
+	sprite.setTexture(texture);
+	sprite.setTextureRect(IntRect(0,0,154,119));
+	animation.create("walk", texture, 0, 0, 154, 119, 7, 8, 154);
+	//animation.create("stay", texture, 0, 0, 210, 160, 8, 5, 210);
+	animation.create("stay", texture, 0, 0, 154, 119, 1, 0, 0);
 	animation.set("stay");
 	animation.play();
-	hitBox = FloatRect(spawnPoint, Vector2f(200, 160));
+	hitBox = FloatRect(spawnPoint, Vector2f(154, 119));
 	running = false;
+
 }
 
 void Player::update(float time) {
@@ -145,6 +149,26 @@ void Player::collisionY() {
 	inventory.input();
 }*/
 
+void Player::openInventory(RenderWindow &window) {
+
+}
+
+/*void Engine::drawInventory() {
+	window.draw(player.inventory.getSprite());
+
+	for (int i = 0; i < 2; i++) {
+		if (!player.inventory.items[i].isEmpty) {
+			window.draw(player.inventory.items[i].spriteInInventory);
+		}
+	}
+
+	Vector2f size;
+	size.x = 13 * player.stats.ATK - 2;
+	size.y = 25;
+	player.inventory.attackRect.setSize(size);
+	window.draw(player.inventory.attackRect);
+}*/
+
 Sprite Item::getSpriteInInventory() {
 	return spriteInInventory;
 }
@@ -201,8 +225,7 @@ void Inventory::open(RenderWindow& window) {
 }*/
 
 bool Enemy::playerIntersection(Player &player) {
-	if (this->sprite.getPosition().x >= player.sprite.getPosition().x && this->sprite.getPosition().x <= player.sprite.getPosition().x + player.texture.getSize().x &&
-		this->sprite.getPosition().y >= player.sprite.getPosition().y && this->sprite.getPosition().y <= player.sprite.getPosition().y + player.texture.getSize().y) {
+	if (hitBox.intersects(player.hitBox)) {
 		return 1;
 	}
 	else {
@@ -222,7 +245,7 @@ Swordsman::Swordsman(int x, int y) {
 
 	id = 1;
 
-	texture.loadFromFile("Swordsman.png");
+	texture.loadFromFile("Fister.png");
 	sprite.setTexture(texture);
 	sprite.setPosition(hitBox.left, hitBox.top);
 }
@@ -250,6 +273,6 @@ Berserk::Berserk(int x, int y) {
 
 	id = 3;
 
-	texture.loadFromFile("Berserk.png");
+	texture.loadFromFile("Fister.png");
 	sprite.setTexture(texture);
 }

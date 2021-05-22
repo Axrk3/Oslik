@@ -16,11 +16,12 @@ void Engine::initialization() {
 	offsetX = resolution.x / 2;
 	offsetY = resolution.y / 2;
 	lvl.loadLVL(std::string("maps/lvl.txt"), player, window);
-	player.initialize("testhero.png", lvl.map, lvl.blockSize, lvl.spawnPoint);
+	player.initialize("run.png", lvl.map, lvl.blockSize, lvl.spawnPoint);
 
 	update(0);
 	draw();
 	sleep(milliseconds(100));
+	clock.restart();
 }
 
 
@@ -79,7 +80,7 @@ void Engine::draw() {
 }
 
 void Engine::update(float time) {
-	lvl.worldUpdate();
+	lvl.worldUpdate(player, clock);
 	player.update(time);
 	offset();
 	view.setCenter(offsetX, offsetY);

@@ -12,7 +12,6 @@ void Level::loadLVL(const string _fileName, Player &_player, RenderWindow &windo
     int x, y, num;
     fileName = _fileName;
 
-    player = _player;
     battle.create(_player, window);
 
     ifstream in(_fileName);
@@ -174,10 +173,12 @@ void Level::draw(RenderWindow& window, View view) {
     drawMap(window,view);
 }
 
-void Level::worldUpdate() {
+void Level::worldUpdate(Player &player, Clock &clock) {
     for (int i = 0; i < enemies.size(); i++) {
         if (enemies.at(i).playerIntersection(player)) {
             battle.start(enemies.at(i));
+            enemies.erase(enemies.begin() + i);
+            clock.restart();
         }
     }
 }
