@@ -145,6 +145,7 @@ class Enemy : public Character {
 protected:
 	int id;
 public:
+	bool playerIntersection(Player &player);
 	int getID();
 };
 

@@ -200,6 +200,16 @@ void Inventory::open(RenderWindow& window) {
 	}
 }*/
 
+bool Enemy::playerIntersection(Player &player) {
+	if (this->sprite.getPosition().x >= player.sprite.getPosition().x && this->sprite.getPosition().x <= player.sprite.getPosition().x + player.texture.getSize().x &&
+		this->sprite.getPosition().y >= player.sprite.getPosition().y && this->sprite.getPosition().y <= player.sprite.getPosition().y + player.texture.getSize().y) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
 int Enemy::getID() {
 	return id;
 }

@@ -21,15 +21,15 @@ private:
 	RectangleShape *barHitBox, hpBar;
 
 public:
-	Battle(Player& _player, RenderWindow& _window);
-
-	void battleStart(Enemy *enemy);
-	void battleInitialization(Enemy *enemy);
+	Battle();
+	void create(Player& _player, RenderWindow& _window);
+	void start(Enemy enemy);
+	void objectsInitialization(Enemy enemy);
 	void menuInitialization();
 	void hpBarInitialization();
 	void cursorInitialization();
 	void playerInitialization();
-	void enemyInitialization(Enemy *enemy);
+	void enemyInitialization(Enemy enemy);
 	void enemyCoordinatesSet();
 	void input();
 	void attack(Character &attacker, Character &defender, int speedX, int speedY);
