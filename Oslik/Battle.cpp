@@ -1,24 +1,19 @@
 #include "Battle.h"
 
-Battle::Battle(Player &_player, RenderWindow &_window) {
-	player = _player;
-
+Battle::Battle() {
 	resolution.x = VideoMode::getDesktopMode().width;
 	resolution.y = VideoMode::getDesktopMode().height;
-	battleView.reset(FloatRect(0, 0, resolution.x, resolution.y));
 
+	battleView.reset(FloatRect(0, 0, resolution.x, resolution.y));
+}
+
+void Battle::create(Player &_player, RenderWindow &_window) {
+	player = _player;
 	window = &_window;
 }
 
-void Battle::battleInitialization(Enemy *enemy) {
-	menuInitialization();
-	cursorInitialization();
-	playerInitialization();
-	enemyInitialization(enemy);
-}
-
-void Battle::battleStart(Enemy *enemy) {
-	battleInitialization(enemy);
+void Battle::start(Enemy enemy) {
+	objectsInitialization(enemy);
 
 	while (player.getStats().HP >= 0 && !enemies.empty()) {
 		draw();
@@ -43,6 +38,13 @@ void Battle::battleStart(Enemy *enemy) {
 
 		window->display();
 	}
+}
+
+void Battle::objectsInitialization(Enemy enemy) {
+	menuInitialization();
+	cursorInitialization();
+	playerInitialization();
+	enemyInitialization(enemy);
 }
 
 void Battle::menuInitialization() {
@@ -90,14 +92,14 @@ void Battle::playerInitialization() {
 	player.getSprite().setPosition(384, 540);
 }
 
-void Battle::enemyInitialization(Enemy *enemy) {
-	enemies.push_back(enemy);
+void Battle::enemyInitialization(Enemy enemy) {
+	enemies.push_back(&enemy);
 
 	if (randomGenerator(40)) {
-		enemies.push_back(EnemyFactory::createEnemy(0, 0, enemy->getID()));
+		enemies.push_back(EnemyFactory::createEnemy(0, 0, enemy.getID()));
 
 		if (randomGenerator(30)) {
-			enemies.push_back(EnemyFactory::createEnemy(0, 0, enemy->getID()));
+			enemies.push_back(EnemyFactory::createEnemy(0, 0, enemy.getID()));
 		}
 	}
 
