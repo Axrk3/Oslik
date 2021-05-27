@@ -17,8 +17,8 @@ public:
 	Texture backgroundTexture;
 	Texture tileSet;
 	RectangleShape tile;
-	Vector2i mapSize,tileIDcord;
-	Vector2f resolution, spawnPoint;
+	Vector2i mapSize, tileIDcord;
+	Vector2f resolution, spawnPoint, viewCord;
 	Battle battle;
 	
 	std::vector <Item> items;
@@ -28,14 +28,14 @@ public:
 	int** map;
 	std::string fileName;
 	void calculateTile(int tileID);
-	void drawMap(RenderWindow& window, View view);
-	void drawBackground(RenderWindow& window, View view);
-	void drawEnemies(RenderWindow& window, View view);
-	void drawFriends(RenderWindow& window, View view);
-	void drawItems(RenderWindow& window, View view);
+	void drawMap(RenderWindow& window);
+	void drawBackground(RenderWindow& window);
+	void drawEnemies(RenderWindow& window);
+	void drawFriends(RenderWindow& window);
+	void drawItems(RenderWindow& window);
 public:
 	void loadLVL(const std::string fileName, Player &_player, RenderWindow &window);
-	void draw(RenderWindow& window, View view);
-	void worldUpdate(Player& player, Clock &clock);
+	void draw(RenderWindow& window);
+	void worldUpdate(Player& player, Clock &clock, Vector2f viewCenter);
 	void clear();
 };

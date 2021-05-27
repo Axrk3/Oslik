@@ -26,9 +26,11 @@ void Engine::initialization() {
 	clock.restart();
 }
 
-
 void Engine::input(Event event, float time) {
-	
+	if (inventoryIsOpen) {
+		player.inventory.input();
+	}
+
 	if (event.type == Event::KeyPressed) {
 
 		if (event.key.code == (Keyboard::Escape)) {
@@ -78,7 +80,7 @@ void Engine::input(Event event, float time) {
 void Engine::draw() {
 	window.clear(Color::White);
 	window.setView(view);
-	lvl.draw(window, view);
+	lvl.draw(window);
 	player.animation.draw(window, player.hitBox.left, player.hitBox.top);
 	drawInventory();
 	window.display();
@@ -87,11 +89,12 @@ void Engine::draw() {
 void Engine::drawInventory() {
 	if (inventoryIsOpen) {
 		player.inventory.draw(window);
+		player.inventory.update(view.getCenter());
 	}
 }
 
 void Engine::update(float time) {
-	lvl.worldUpdate(player, clock);
+	lvl.worldUpdate(player, clock, view.getCenter());
 	player.update(time, view.getCenter());
 	offset();
 	view.setCenter(offsetX, offsetY);

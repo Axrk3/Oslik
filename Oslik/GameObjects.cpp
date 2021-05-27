@@ -179,46 +179,64 @@ Inventory::Inventory() {
 	attackBar.setPosition(1248, 328);
 	attackBar.setFillColor(Color::Red);
 
-	consumable[0].hitBox.left = 540;
-	consumable[0].hitBox.top = 320;
+	for (int i = 0; i < 8; i++) {
+		cells[i].hitBox.width = 86;
+		cells[i].hitBox.height = 85;
+	}
 
-	consumable[1].hitBox.left = 640;
-	consumable[1].hitBox.top = 320;
-
-	consumable[2].hitBox.left = 540;
-	consumable[2].hitBox.top = 420;
 	/*for (int i = 0; i < 3; i++) {
 		if (i % 2 == 0) {
-			items[i].rect.setPosition(540,  320);
+			items[i].rect.setPosition(540, 320);
 		}
 	}*/
 }
 
-void Inventory::update(Vector2f viewCenter) {
-	sprite.setPosition(viewCenter.x - 480, viewCenter.y - 270);
+void Inventory::input() {
+	mousePosition.x = sprite.getPosition().x - 1920 / 2 + Mouse::getPosition().x;
+	mousePosition.y = sprite.getPosition().y - 1080 / 2 + Mouse::getPosition().y;
+
+	for (int i = 0; i < 8; i++) {
+		if (mousePosition.x >= cells[i].hitBox.left && mousePosition.x <= cells[i].hitBox.left + cells[i].hitBox.width &&
+			mousePosition.y >= cells[i].hitBox.top && mousePosition.y <= cells[i].hitBox.top + cells[i].hitBox.height) {
+			if (Mouse::isButtonPressed(Mouse::Button::Left) && !cells[i].isEmpty) std::cout << "click i = " << i << " ";
+		}
+	}
 }
 
-void Inventory::draw(RenderWindow& window) {
+void Inventory::draw(RenderWindow &window) {
 	window.draw(sprite);
 	window.draw(attackBar);
 	window.draw(hpBar);
 	for (int i = 0; i < 8; i++) {
-		if (!consumable[i].isEmpty) window.draw(consumable[i].item->getSprite());
+		if (!cells[i].isEmpty) window.draw(cells[i].item->getSprite());
 	}
 }
 
-/*void Inventory::addItem(Consumable& item) {
+void Inventory::update(Vector2f viewCenter) {
+	sprite.setPosition(viewCenter.x - 480, viewCenter.y - 270);
+
+	Vector2i xCoords;
+	xCoords.x = 51;
+	xCoords.y = 150;
+	int yDelimeter = 42;
+
+	for (int i = 0; i < 7; i += 2) {
+		cells[i].hitBox.left = sprite.getPosition().x + xCoords.x - 480;
+		cells[i + 1].hitBox.left = sprite.getPosition().x + xCoords.y - 480;
+		cells[i].hitBox.top = cells[i + 1].hitBox.top = sprite.getPosition().y + yDelimeter - 270;
+		yDelimeter += 96;
+ 	}
+}
+
+void Inventory::addItem(Item &item) {
 	for (int i = 0; i < 8; i++) {
-		if (items[i].isEmpty) {
-			item.rect.left = items[i].rect.left;
-			item.rect.top = items[i].rect.top;
-			item.spriteInInventory.setPosition(item.rect.left, item.rect.top);
-			item.isEmpty = false;
-			items[i] = item;
+		if (!cells[i].isEmpty) {
+			item.sprite.setPosition(cells[i].hitBox.left, cells[i].hitBox.top);
+			cells[i].isEmpty = false;
 			break;
 		}
 	}
-}*/
+}
 
 bool Enemy::playerIntersection(Player &player) {
 	if (hitBox.intersects(player.hitBox)) {

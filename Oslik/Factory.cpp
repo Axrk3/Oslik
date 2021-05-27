@@ -1,7 +1,7 @@
 #include "Factory.h"
 
-Enemy* EnemyFactory::createEnemy(int x, int y, int id) {
-	Enemy* newEnemy;
+Enemy *EnemyFactory::createEnemy(int x, int y, int id) {
+	Enemy *newEnemy;
 
 	switch (id) {
 	case 1:
@@ -36,8 +36,8 @@ Enemy* EnemyFactory::createEnemy(int x, int y, int id) {
 	return newFriend;
 }*/
 
-Item* ItemFactory::createItem(int x, int y, int id) {
-	Item* newItem;
+Item *ItemFactory::createItem(int x, int y, int id) {
+	Item *newItem;
 
 	switch (id)
 	{
@@ -60,6 +60,9 @@ Item* ItemFactory::createItem(int x, int y, int id) {
 		newItem = new ResistancePotion("ResistancePotion", 1);
 		break;
 	}
+
+	newItem->hitBox.left = x;
+	newItem->hitBox.top = y;
 
 	return newItem;
 }

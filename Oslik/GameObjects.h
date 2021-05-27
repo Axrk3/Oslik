@@ -88,15 +88,17 @@ public:
 
 class Inventory : public GameObject {
 public:
-	Cell consumable[8];
+	Cell cells[8];
 	RectangleShape attackBar, hpBar;
+	Vector2f mousePosition;
 	int quantityConsum, quantityEquip;
 
 public:
 	Inventory();
 	void draw(RenderWindow &window);
-	void addItem(Consumable &item);
-	void addItem(Equipment item);
+	void input();
+	void addItem(Item &item);
+	//void addItem(Equipment &item);
 	void update(Vector2f viewCenter);
 };
 

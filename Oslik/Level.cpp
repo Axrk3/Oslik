@@ -89,11 +89,8 @@ void Level::calculateTile(int tileID) {
     tile.setTextureRect(IntRect(tileIDcord.x, tileIDcord.y, blockSize, blockSize));
 }
 
-void Level::drawMap(RenderWindow &window, View view) {
-    // resolution.x/2 = 960, resolution.y/2 = 540, blockSize = 64;
-    Vector2f viewCord;
-    viewCord.x = view.getCenter().x;
-    viewCord.y = view.getCenter().y;
+void Level::drawMap(RenderWindow &window) {
+    // resolution.x / 2 = 960, resolution.y / 2 = 540, blockSize = 64;
     for (int i = (viewCord.y - 540) / 64 < 0 ? 0 : (viewCord.y - 540) / 64;
         i < ((viewCord.y + 540) / 64 > mapSize.y ? mapSize.y : (viewCord.y + 540) / 64); i++) {
         for (int j = (viewCord.x - 960) / 64 < 0 ? 0 : (viewCord.x - 960) / 64;
@@ -106,16 +103,14 @@ void Level::drawMap(RenderWindow &window, View view) {
     }
 }
 
-void Level::drawBackground(RenderWindow &window, View view) {
-    backgroundSprite.setPosition(view.getCenter().x - resolution.x / 2,view.getCenter().y - resolution.y / 2);
+void Level::drawBackground(RenderWindow &window) {
+    backgroundSprite.setPosition(viewCord.x - resolution.x / 2, viewCord.y - resolution.y / 2);
     window.draw(backgroundSprite);
 }
 
-void Level::drawEnemies(RenderWindow& window, View view) {
-    Vector2f enemyCord, viewCord;
+void Level::drawEnemies(RenderWindow &window) {
+    Vector2f enemyCord;
     int enemyWidth, enemyHeight;
-    viewCord.x = view.getCenter().x;
-    viewCord.y = view.getCenter().y;
     for (int i = 0; i < enemies.size(); i++) {
         enemyCord.x = enemies.at(i).getHitBox().left; enemyCord.y = enemies.at(i).getHitBox().top;
         enemyWidth = enemies.at(i).getHitBox().width; enemyHeight = enemies.at(i).getHitBox().height;
@@ -129,11 +124,9 @@ void Level::drawEnemies(RenderWindow& window, View view) {
     }
 }
 
-void Level::drawFriends(RenderWindow& window, View view) {
-    Vector2f friendCord, viewCord;
+void Level::drawFriends(RenderWindow &window) {
+    Vector2f friendCord;
     int friendWidth, friendHeight;
-    viewCord.x = view.getCenter().x;
-    viewCord.y = view.getCenter().y;
     for (int i = 0; i < friends.size(); i++) {
         friendCord.x = friends.at(i).getHitBox().left; friendCord.y = friends.at(i).getHitBox().top;
         friendWidth = friends.at(i).getHitBox().width; friendHeight = friends.at(i).getHitBox().height;
@@ -147,33 +140,33 @@ void Level::drawFriends(RenderWindow& window, View view) {
     }
 }
 
-void Level::drawItems(RenderWindow& window, View view) {
-    Vector2f itemCord, viewCord;
+void Level::drawItems(RenderWindow &window) {
+    Vector2f itemCord;
     int itemWidth, itemHeight;
-    viewCord.x = view.getCenter().x;
-    viewCord.y = view.getCenter().y;
-    for (int i = 0; i < enemies.size(); i++) {
-        itemCord.x = enemies.at(i).getHitBox().left; itemCord.y = enemies.at(i).getHitBox().top;
-        itemWidth = enemies.at(i).getHitBox().width; itemHeight = enemies.at(i).getHitBox().height;
+    for (int i = 0; i < items.size(); i++) {
+        itemCord.x = items.at(i).getHitBox().left; itemCord.y = items.at(i).getHitBox().top;
+        itemWidth = items.at(i).getHitBox().width; itemHeight = items.at(i).getHitBox().height;
         if (itemCord.x > viewCord.x - 960 - itemWidth &&
             itemCord.x < (viewCord.x + 960)) {
             if (itemCord.y > viewCord.y - 540 - itemHeight &&
                 itemCord.y < (viewCord.y + 540)) {
-                window.draw(enemies.at(i).getSprite());
+                window.draw(items.at(i).getSprite());
             }
         }
     }
 }
 
-void Level::draw(RenderWindow& window, View view) {
-    drawBackground(window, view);
-    drawEnemies(window, view);
-    //drawFriends(window, view);
-    //drawItems(window,view);
-    drawMap(window,view);
+void Level::draw(RenderWindow &window) {
+    drawBackground(window);
+    drawEnemies(window);
+    //drawFriends(window);
+    //drawItems(window);
+    drawMap(window);
 }
 
-void Level::worldUpdate(Player &player, Clock &clock) {
+void Level::worldUpdate(Player &player, Clock &clock, Vector2f viewCenter) {
+    viewCord = viewCenter;
+
     for (int i = 0; i < enemies.size(); i++) {
         if (enemies.at(i).playerIntersection(player)) {
             battle.start(enemies.at(i));
