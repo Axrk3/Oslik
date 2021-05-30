@@ -148,22 +148,6 @@ void Player::openInventory(RenderWindow &window) {
 
 }
 
-/*void Engine::drawInventory() {
-	window.draw(player.inventory.getSprite());
-
-	for (int i = 0; i < 2; i++) {
-		if (!player.inventory.items[i].isEmpty) {
-			window.draw(player.inventory.items[i].spriteInInventory);
-		}
-	}
-
-	Vector2f size;
-	size.x = 13 * player.stats.ATK - 2;
-	size.y = 25;
-	player.inventory.attackRect.setSize(size);
-	window.draw(player.inventory.attackRect);
-}*/
-
 Sprite Item::getSpriteInInventory() {
 	return spriteInInventory;
 }

@@ -91,10 +91,10 @@ void Level::calculateTile(int tileID) {
 
 void Level::drawMap(RenderWindow &window) {
     // resolution.x / 2 = 960, resolution.y / 2 = 540, blockSize = 64;
-    for (int i = (viewCord.y - 540) / 64 < 0 ? 0 : (viewCord.y - 540) / 64;
-        i < ((viewCord.y + 540) / 64 > mapSize.y ? mapSize.y : (viewCord.y + 540) / 64); i++) {
-        for (int j = (viewCord.x - 960) / 64 < 0 ? 0 : (viewCord.x - 960) / 64;
-            j < ((viewCord.x + 960) / 64 > mapSize.x ? mapSize.x : (viewCord.x + 960) / 64); j++) {
+    for (int i = (viewCord.y - 540) / 64 - 1 < 0 ? 0 : (viewCord.y - 540) / 64 - 1;
+        i < ((viewCord.y + 540) / 64  + 1 > mapSize.y ? mapSize.y : (viewCord.y + 540) / 64 + 1); i++) {
+        for (int j = (viewCord.x - 960) / 64 - 1 < 0 ? 0 : (viewCord.x - 960) / 64 - 1;
+            j < ((viewCord.x + 960) / 64 + 1 > mapSize.x ? mapSize.x : (viewCord.x + 960) / 64 + 1); j++) {
             if (map[i][j] == 0) continue;
             calculateTile(map[i][j]);
             tile.setPosition(j * blockSize, i * blockSize);
