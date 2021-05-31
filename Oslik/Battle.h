@@ -32,8 +32,8 @@ public:
 	void enemyInitialization(Enemy &enemy);
 	void enemyCoordinatesSet();
 	void input();
-	void attack(Player& attacker, Enemy& defender, int speedX, int speedY);
-	void attack(Enemy& attacker, Player& defender, int speedX, int speedY);
+	void attack(Player& attacker, Enemy& defender);
+	void attack(Enemy& attacker, Player& defender);
 	int chooseEnemy();
 	void actionProcessing();
 	void defenceUp(Character &defender);

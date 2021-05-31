@@ -90,9 +90,15 @@ class Inventory : public GameObject {
 public:
 	Cell cells[8];
 	RectangleShape attackBar, hpBar;
+	FloatRect buttons[3];
 	Vector2f mousePosition;
-	int quantityConsum, quantityEquip;
+	int quantityConsum, quantityEquip, openedCell, activeButton;
+	
 
+	Texture menuTexture;
+	Sprite menuSprite, exemineButton, useButton, dropButton;
+
+	bool isClicked = false;
 public:
 	Inventory();
 	void draw(RenderWindow &window);

@@ -26,7 +26,7 @@ void Battle::start(Enemy &enemy) {
 
 		if (isAction) {
 			for (int i = 0; i < enemies.size(); i++) {
-				attack(*enemies.at(i), *player, -20, (i == 1) ? 0 : i ? -1 : 1);
+				attack(*enemies.at(i), *player);
 			}
 
 			if (isBlocked) {
@@ -152,10 +152,10 @@ void Battle::input() {
 	currentPosition.y = barHitBox[(action.x + 2 * action.y)].getPosition().y;
 }
 
-void Battle::attack(Player& attacker, Enemy& defender, int speedX, int speedY) {
+void Battle::attack(Player& attacker, Enemy& defender) {
 	Vector2f offset;
-	offset.x = speedX * 0.33;
-	offset.y = speedY * 1.3;
+	offset.x = (defender.sprite.getPosition().x - attacker.sprite.getPosition().x) / 50;
+	offset.y = (defender.sprite.getPosition().y - attacker.sprite.getPosition().y) / 50;
 	int step = 0;
 
 	while (attacker.sprite.getPosition().x <= defender.sprite.getPosition().x) {
@@ -188,10 +188,10 @@ void Battle::attack(Player& attacker, Enemy& defender, int speedX, int speedY) {
 	}
 }
 
-void Battle::attack(Enemy& attacker, Player& defender, int speedX, int speedY) {
+void Battle::attack(Enemy& attacker, Player& defender) {
 	Vector2f offset;
-	offset.x = speedX * 0.33;
-	offset.y = speedY * 1.3;
+	offset.x = (defender.sprite.getPosition().x - attacker.sprite.getPosition().x) / 50;
+	offset.y = (defender.sprite.getPosition().y - attacker.sprite.getPosition().y) / 50;
 	int step = 0;
 
 	while (attacker.sprite.getPosition().x >= defender.sprite.getPosition().x) {
@@ -201,8 +201,6 @@ void Battle::attack(Enemy& attacker, Player& defender, int speedX, int speedY) {
 		draw();
 		window->display();
 	}
-
-
 
 	if (attacker.stats.ATK > defender.stats.DEF)
 		defender.stats.HP -= (attacker.stats.ATK - defender.stats.DEF);
@@ -253,7 +251,7 @@ void Battle::actionProcessing() {
 		switch (action.x + 2 * action.y) {
 		case 0:
 			choice = chooseEnemy();
-			attack(*player, *enemies.at(choice), 20, (choice == 1) ? 0 : choice ? 1 : -1);
+			attack(*player, *enemies.at(choice));
 			isAction = true;
 			break;
 		case 1:
