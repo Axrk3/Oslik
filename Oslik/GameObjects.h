@@ -27,6 +27,9 @@ public:
 		name = _name;
 		coefficient = _coefficient;
 	}
+
+	//virtual void examine() = 0;
+	//virtual void use() = 0;
 	Sprite getSpriteInInventory();
 };
 
@@ -79,11 +82,14 @@ public:
 };
 
 class Cell {
+	//Заприватить и сдружить с инвентарём
 public:
 	FloatRect hitBox;
 	Item *item;
 	bool isEmpty = true;
 	int count = 0;
+
+	void drop();
 };
 
 class Inventory : public GameObject {
@@ -96,7 +102,7 @@ public:
 	
 
 	Texture menuTexture;
-	Sprite menuSprite, exemineButton, useButton, dropButton;
+	Sprite menuSprite, buttonSprite;
 
 	bool isClicked = false;
 public:
@@ -104,6 +110,7 @@ public:
 	void draw(RenderWindow &window);
 	void input();
 	void addItem(Item &item);
+	void menuLogic();
 	//void addItem(Equipment &item);
 	void update(Vector2f viewCenter);
 };

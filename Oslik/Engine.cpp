@@ -8,9 +8,6 @@ Engine::Engine() {
 	window.setFramerateLimit(60);
 
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
-	// Вынести в отдельный метод инициализации анимации через цикл у всех существ;
-	menu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
-	mainMenu.initializeMenu(Vector2f(250, 500), Vector2f(250, 100));
 }
 
 void Engine::initialization() {
@@ -157,4 +154,5 @@ void Engine::closeSession() {
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
 	window.setView(view);
 	lvl.clear();
+	sleep(milliseconds(100));
 }

@@ -43,6 +43,7 @@ void Battle::start(Enemy &enemy) {
 }
 
 void Battle::objectsInitialization(Enemy &enemy) {
+	window->setView(battleView);
 	menuInitialization();
 	cursorInitialization();
 	playerInitialization();
@@ -52,7 +53,7 @@ void Battle::objectsInitialization(Enemy &enemy) {
 void Battle::menuInitialization() {
 	menuTexture.loadFromFile("menu.png");
 	menuSprite.setTexture(menuTexture);
-	menuSprite.setPosition(resolution.x / 4, 3 * resolution.y / 4);
+	menuSprite.setPosition(0, resolution.y - 260);
 
 	barSize.x = 219;
 	barSize.y = 91;
@@ -76,7 +77,7 @@ void Battle::hpBarInitialization() {
 
 	hpModifier = hpBarSize.x / player->stats.HP;
 
-	hpBar.setPosition(menuSprite.getPosition().x + 698, menuSprite.getPosition().y + 61);
+	hpBar.setPosition(menuSprite.getPosition().x + 694, menuSprite.getPosition().y + 57);
 	hpBar.setSize(hpBarSize);
 	hpBar.setFillColor(Color(220, 20, 60, 255));
 }
@@ -154,8 +155,8 @@ void Battle::input() {
 
 void Battle::attack(Player& attacker, Enemy& defender) {
 	Vector2f offset;
-	offset.x = (defender.sprite.getPosition().x - attacker.sprite.getPosition().x) / 50;
-	offset.y = (defender.sprite.getPosition().y - attacker.sprite.getPosition().y) / 50;
+	offset.x = (defender.sprite.getPosition().x - attacker.sprite.getPosition().x) / 30;
+	offset.y = (defender.sprite.getPosition().y - attacker.sprite.getPosition().y) / 30;
 	int step = 0;
 
 	while (attacker.sprite.getPosition().x <= defender.sprite.getPosition().x) {
@@ -190,8 +191,8 @@ void Battle::attack(Player& attacker, Enemy& defender) {
 
 void Battle::attack(Enemy& attacker, Player& defender) {
 	Vector2f offset;
-	offset.x = (defender.sprite.getPosition().x - attacker.sprite.getPosition().x) / 50;
-	offset.y = (defender.sprite.getPosition().y - attacker.sprite.getPosition().y) / 50;
+	offset.x = (defender.sprite.getPosition().x - attacker.sprite.getPosition().x) / 30;
+	offset.y = (defender.sprite.getPosition().y - attacker.sprite.getPosition().y) / 30;
 	int step = 0;
 
 	while (attacker.sprite.getPosition().x >= defender.sprite.getPosition().x) {

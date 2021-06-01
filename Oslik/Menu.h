@@ -5,18 +5,18 @@ using namespace sf;
 
 class Menu {
 protected:
-	Vector2f menuSize, menuBarSize, mousePosition, Offset, menuPosition;
-	RectangleShape menu, *menuBar;
-	int menuBarNum, currentBar = 0;
-	Font font;
-	Text* text;
+	Vector2f mousePosition;
+	int activeButton = -1;
+
+	Texture menuTexture;
+	Sprite menuSprite, buttonSprite;
+	FloatRect *buttons;
 
 	virtual void menuInput() = 0;
 	virtual void menuLogic() = 0;
 	virtual void drawMenu(RenderWindow& window) = 0;
 
 public:
-	virtual void initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize) = 0;
 	virtual int invokeMenu(RenderWindow &window) = 0;
 };
 
@@ -28,19 +28,20 @@ protected:
 	bool closeMenu = false;
 	bool closeGame = false;
 public:
-	void initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize);
+	GameMenu();
 	int invokeMenu(RenderWindow &window);
-	void updateMenu(Vector2f _menuPosition);
+	void updateMenu(Vector2f viewCenter);
 };
 
 class MainMenu : public Menu {
 protected:
 	int choice = 0;
+	Sprite background;
 
 	void menuInput();
 	void menuLogic();
 	void drawMenu(RenderWindow &window);
 public:
-	void initializeMenu(Vector2f _menuSize, Vector2f _menuBarSize);
+	MainMenu();
 	int invokeMenu(RenderWindow &window);
 };

@@ -12,7 +12,7 @@ private:
 	std::vector <Enemy*> enemies;
 	
 	double hpModifier;
-	bool isAction, isBlocked, exitFlag;
+	bool isAction, isBlocked, exitFlag, inventoryIsOpen;
 
 	Texture menuTexture, cursorTexture;
 	Sprite menuSprite, cursorSprite;

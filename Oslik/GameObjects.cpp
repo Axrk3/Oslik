@@ -18,7 +18,7 @@ Character::characteristics Character::getStats() {
 	return stats;
 }
 
-void Player::initialize(String fileName,int** &_map, int _blockSize,Vector2f spawnPoint) {
+void Player::initialize(String fileName, int **&_map, int _blockSize, Vector2f spawnPoint) {
 	// Часть выкинуть в конструктор и сделать метод для смены карты
 	stats.HP = 100;
 	stats.ATK = 40;
@@ -27,7 +27,7 @@ void Player::initialize(String fileName,int** &_map, int _blockSize,Vector2f spa
 	blockSize = _blockSize;
 	texture.loadFromFile(fileName);
 	sprite.setTexture(texture);
-	sprite.setTextureRect(IntRect(0,0,154,119));
+	sprite.setTextureRect(IntRect(0, 0, 154, 119));
 	animation.create("walk", texture, 0, 0, 154, 119, 7, 8, 154);
 	//animation.create("stay", texture, 0, 0, 210, 160, 8, 5, 210);
 	animation.create("stay", texture, 0, 0, 154, 119, 1, 0, 0);
@@ -38,7 +38,7 @@ void Player::initialize(String fileName,int** &_map, int _blockSize,Vector2f spa
 
 }
 
-void Player::update(float time,Vector2f viewCenter) {
+void Player::update(float time, Vector2f viewCenter) {
 	hitBox.left += dx * time;
 	collisionX();
 	
@@ -161,14 +161,9 @@ Inventory::Inventory() {
 
 	menuTexture.loadFromFile("actionMenu.png");
 	menuSprite.setTexture(menuTexture);
-	exemineButton.setTexture(menuTexture);
-	useButton.setTexture(menuTexture);
-	dropButton.setTexture(menuTexture);
-
 	menuSprite.setTextureRect(IntRect(0, 0, 127, 95));
-	exemineButton.setTextureRect(IntRect(0, 96, 99, 19));
-	useButton.setTextureRect(IntRect(0, 116, 99, 19));
-	dropButton.setTextureRect(IntRect(0, 136, 99, 19));
+
+	buttonSprite.setTexture(menuTexture);
 
 	attackBar.setPosition(1248, 328);
 	attackBar.setFillColor(Color::Red);
@@ -191,8 +186,8 @@ Inventory::Inventory() {
 }
 
 void Inventory::input() {
-	mousePosition.x = sprite.getPosition().x - 1920 / 4 + Mouse::getPosition().x;
-	mousePosition.y = sprite.getPosition().y - 1080 / 4 + Mouse::getPosition().y;
+	mousePosition.x = sprite.getPosition().x - 480 + Mouse::getPosition().x;
+	mousePosition.y = sprite.getPosition().y - 270 + Mouse::getPosition().y;
 
 	if (Mouse::isButtonPressed(Mouse::Button::Left)) {
 		isClicked = false;
@@ -200,10 +195,12 @@ void Inventory::input() {
 
 	for (int i = 0; i < 8; i++) {
 		if (mousePosition.x >= cells[i].hitBox.left && mousePosition.x <= cells[i].hitBox.left + cells[i].hitBox.width &&
-			mousePosition.y >= cells[i].hitBox.top && mousePosition.y <= cells[i].hitBox.top + cells[i].hitBox.height) {
-			if (Mouse::isButtonPressed(Mouse::Button::Left) ) {
+			mousePosition.y >= cells[i].hitBox.top && mousePosition.y <= cells[i].hitBox.top + cells[i].hitBox.height &&
+			activeButton == -1) {
+			if (Mouse::isButtonPressed(Mouse::Button::Left) && !cells[i].isEmpty) {
 				isClicked = true;
 				openedCell = i;
+				break;
 			}
 		}
 	}
@@ -212,7 +209,32 @@ void Inventory::input() {
 		if (mousePosition.x >= buttons[i].left && mousePosition.x <= buttons[i].left + buttons[i].width &&
 			mousePosition.y >= buttons[i].top && mousePosition.y <= buttons[i].top + buttons[i].height) {
 			activeButton = i;
+			if (Mouse::isButtonPressed(Mouse::Button::Left)) {
+				menuLogic();
+			}
+			break;
 		}
+		else {
+			activeButton = -1;
+		}
+	}
+}
+
+void Inventory::menuLogic() {
+	switch (activeButton)
+	{
+	case 0:
+		//cells[openedCell].item->examine();
+		std::cout << "examine\n";
+		break;
+	case 1:
+		//cells[openedCell].item->use();
+		std::cout << "use\n";
+		break;
+	case 2:
+		cells[openedCell].drop();
+		std::cout << "drop\n";
+		break;
 	}
 }
 
@@ -220,27 +242,18 @@ void Inventory::draw(RenderWindow &window) {
 	window.draw(sprite);
 	window.draw(attackBar);
 	window.draw(hpBar);
+
 	for (int i = 0; i < 8; i++) {
-		if (!cells[i].isEmpty) window.draw(cells[i].item->getSprite());
+		if (!cells[i].isEmpty) {
+			window.draw(cells[i].item->getSprite());
+		}
 	}
 	
 	if (isClicked) {
 		window.draw(menuSprite);
 
-		switch (activeButton)
-		{
-		case 0: 
-			exemineButton.setPosition(buttons[0].left, buttons[0].top); //делитнуть бы это всё и сделать 1 спрайт
-			window.draw(exemineButton);
-			break;
-		case 1:
-			useButton.setPosition(buttons[1].left, buttons[1].top);
-			window.draw(useButton);
-			break;
-		case 2:
-			dropButton.setPosition(buttons[2].left, buttons[2].top);
-			window.draw(dropButton);
-			break;
+		if (activeButton > -1) {
+			window.draw(buttonSprite);
 		}
 	}
 }
@@ -248,32 +261,56 @@ void Inventory::draw(RenderWindow &window) {
 void Inventory::update(Vector2f viewCenter) {
 	sprite.setPosition(viewCenter.x - 480, viewCenter.y - 270);
 
-	int firstRow = 51, secondRow = 150;
+	int firstСolumn = 51, secondСolumn = 150;
 	int yDelimeter = 42;
-
-	for (int i = 0; i < 3; i++) {
-		buttons[i].left = menuSprite.getPosition().x + 14;
-		buttons[i].top = menuSprite.getPosition().y + 12 + i * 26;
-	}
-
 	for (int i = 0; i < 7; i += 2) {
-		cells[i].hitBox.left = sprite.getPosition().x + firstRow;
-		cells[i + 1].hitBox.left = sprite.getPosition().x + secondRow;
+		cells[i].hitBox.left = sprite.getPosition().x + firstСolumn;
+		cells[i + 1].hitBox.left = sprite.getPosition().x + secondСolumn;
 		cells[i].hitBox.top = cells[i + 1].hitBox.top = sprite.getPosition().y + yDelimeter;
 		yDelimeter += 96;
  	}
 
 	menuSprite.setPosition(cells[openedCell].hitBox.left + cells[openedCell].hitBox.width, cells[openedCell].hitBox.top);
+
+	yDelimeter = 12;
+	for (int i = 0; i < 3; i++) {
+		buttons[i].left = menuSprite.getPosition().x + 14;
+		buttons[i].top = menuSprite.getPosition().y + yDelimeter;
+		yDelimeter += 26;
+	}
+
+	switch (activeButton)
+	{
+	case 0:
+		buttonSprite.setTextureRect(IntRect(0, 96, 99, 19));
+		buttonSprite.setPosition(buttons[0].left, buttons[0].top);
+		break;
+	case 1:
+		buttonSprite.setTextureRect(IntRect(0, 116, 99, 19));
+		buttonSprite.setPosition(buttons[1].left, buttons[1].top);
+		break;
+	case 2: 
+		buttonSprite.setTextureRect(IntRect(0, 136, 99, 19));
+		buttonSprite.setPosition(buttons[2].left, buttons[2].top);
+		break;
+	}
 }
 
 void Inventory::addItem(Item &item) {
 	for (int i = 0; i < 8; i++) {
 		if (!cells[i].isEmpty) {
 			item.sprite.setPosition(cells[i].hitBox.left, cells[i].hitBox.top);
+			cells[i].item = &item;
 			cells[i].isEmpty = false;
 			break;
 		}
 	}
+}
+
+void Cell::drop() {
+	//Расширить до более, чем 1 предмета
+	item = 0;
+	isEmpty = true;
 }
 
 bool Enemy::playerIntersection(Player &player) {
