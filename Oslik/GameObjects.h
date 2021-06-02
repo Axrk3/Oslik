@@ -26,6 +26,8 @@ public:
 	Item(String _name, int _coefficient) {
 		name = _name;
 		coefficient = _coefficient;
+		texture.loadFromFile(_name + ".png");
+		sprite.setTexture(texture);
 	}
 
 	//virtual void examine() = 0;
@@ -64,6 +66,8 @@ public:
 };
 
 class HealthPotion : public Consumable {
+private:
+	
 public: 
 	HealthPotion(String _name, int _coefficient) : Consumable(_name, _coefficient) {};
 	void consume();

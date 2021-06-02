@@ -63,6 +63,7 @@ Item *ItemFactory::createItem(int x, int y, int id) {
 
 	newItem->hitBox.left = x;
 	newItem->hitBox.top = y;
+	newItem->sprite.setPosition(x,y);
 
 	return newItem;
 }
