@@ -183,8 +183,8 @@ Inventory::Inventory() {
 	}
 
 	for (int i = 0; i < 8; i++) {
-		cells[i].hitBox.width = 86;
-		cells[i].hitBox.height = 85;
+		cells[i].hitBox.width = 67;
+		cells[i].hitBox.height = 67;
 		cells[i].isEmpty = true;
 	}
 
@@ -271,8 +271,8 @@ void Inventory::draw(RenderWindow &window) {
 void Inventory::update(Vector2f viewCenter) {
 	sprite.setPosition(viewCenter.x - 480, viewCenter.y - 270);
 
-	int firstÑolumn = 51, secondÑolumn = 150;
-	int yDelimeter = 42;
+	int firstÑolumn = 61, secondÑolumn = 160;
+	int yDelimeter = 51;
 	for (int i = 0; i < 7; i += 2) {
 		cells[i].hitBox.left = sprite.getPosition().x + firstÑolumn;
 		cells[i + 1].hitBox.left = sprite.getPosition().x + secondÑolumn;
@@ -322,7 +322,6 @@ void Inventory::addItem(Item &item) {
 	for (int i = 0; i < 8; i++) {
 		if (cells[i].isEmpty) {
 			cells[i].item = &item;
-			cells[i].item->sprite.setPosition(cells[i].hitBox.left, cells[i].hitBox.top);
 			cells[i].isEmpty = false;
 			break;
 		}

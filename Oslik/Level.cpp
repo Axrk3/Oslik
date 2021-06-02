@@ -101,7 +101,7 @@ void Level::readItem(ifstream &in) {
         in >> x;
         if (x == -1) break;
         in >> y; in >> id;
-        items.push_back(*ItemFactory::createItem(x, y, id));
+        items.push_back(ItemFactory::createItem(x, y, id));
     }
 }
 
@@ -165,13 +165,13 @@ void Level::drawItems(RenderWindow &window) {
     Vector2f itemCord;
     int itemWidth, itemHeight;
     for (int i = 0; i < items.size(); i++) {
-        itemCord.x = items.at(i).getHitBox().left; itemCord.y = items.at(i).getHitBox().top;
-        itemWidth = items.at(i).getHitBox().width; itemHeight = items.at(i).getHitBox().height;
+        itemCord.x = items.at(i)->getHitBox().left; itemCord.y = items.at(i)->getHitBox().top;
+        itemWidth = items.at(i)->getHitBox().width; itemHeight = items.at(i)->getHitBox().height;
         if (itemCord.x > viewCord.x - 960 - itemWidth &&
             itemCord.x < (viewCord.x + 960)) {
             if (itemCord.y > viewCord.y - 540 - itemHeight &&
                 itemCord.y < (viewCord.y + 540)) {
-                window.draw(items.at(i).getSprite());
+                window.draw(items.at(i)->getSprite());
             }
         }
     }
@@ -200,10 +200,10 @@ void Level::worldUpdate(Player &player, Clock &clock, Vector2f viewCenter) {
     }
 
     for (int i = 0; i < items.size(); i++) {
-        if (items.at(i).getHitBox().left > viewCord.x - 960 && items.at(i).getHitBox().left < viewCord.x + 960 &&
-            items.at(i).getHitBox().top > viewCord.y - 540 && items.at(i).getHitBox().top < viewCord.y + 540) {
-            if (items.at(i).playerIntersection(player)) {
-                player.inventory.addItem(items.at(i));
+        if (items.at(i)->getHitBox().left > viewCord.x - 960 && items.at(i)->getHitBox().left < viewCord.x + 960 &&
+            items.at(i)->getHitBox().top > viewCord.y - 540 && items.at(i)->getHitBox().top < viewCord.y + 540) {
+            if (items.at(i)->playerIntersection(player)) {
+                player.inventory.addItem(*items.at(i));
                 items.erase(items.begin() + i);
             }
         }

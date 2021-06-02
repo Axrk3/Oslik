@@ -23,7 +23,7 @@ public:
 	Vector2f resolution, spawnPoint, viewCord;
 	Battle battle;
 
-	std::vector <Item> items;
+	std::vector <Item*> items;
 	std::vector <Friend> friends;
 	std::vector <Enemy> enemies;
 	int tileSetWidth,blockSize;
