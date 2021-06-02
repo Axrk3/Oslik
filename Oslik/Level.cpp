@@ -1,7 +1,5 @@
 #include "Level.h"
 
-using namespace std;
-
 Level::Level() {
     resolution.x = VideoMode::getDesktopMode().width;
     resolution.y = VideoMode::getDesktopMode().height;
@@ -46,34 +44,15 @@ void Level::loadLVL(const string _fileName, Player &_player, RenderWindow &windo
                 in >> map[i][j];
             }
         }
-        // spawnpoint
-        in >> line;
-        in >> spawnPoint.x; in >> spawnPoint.y;
-        // Friends
-        in >> line;
-        while (true) {
-            in >> x;
-            if (x == -1) break;
-            in >> y; in >> num;
-            //friends.push_back(*EnemyFactory::createFriend(x, y, num));
+
+        while (!in.eof()) {
+            getline(in, line);
+            if (!line.compare("SPAWN_POINT")) readSpawnPoint(in);
+            if (!line.compare("FRIEND")) readFriend(in);
+            if (!line.compare("ENEMY")) readEnemy(in);
+            if (!line.compare("ITEM")) readItem(in);
+            if (!line.compare("END")) readEndPoint(in);
         }
-        // Enemies
-        in >> line;
-        while (true) {
-            in >> x;
-            if (x == -1) break;
-            in >> y; in >> num;
-            enemies.push_back(*EnemyFactory::createEnemy(x, y, num));
-        }
-        // Items
-        in >> line;
-        while (true) {
-            in >> x;
-            if (x == -1) break;
-            in >> y; in >> num;
-            items.push_back(*ItemFactory::createItem(x, y, num));
-        }
-    
     }
     in.close();
 }
@@ -87,6 +66,48 @@ void Level::calculateTile(int tileID) {
     else tileIDcord.y = (tileID / tileSetWidth) * blockSize;
 
     tile.setTextureRect(IntRect(tileIDcord.x, tileIDcord.y, blockSize, blockSize));
+}
+
+void Level::readSpawnPoint(ifstream &in) {
+    in >> spawnPoint.x; in >> spawnPoint.y;
+}
+
+void Level::readFriend(ifstream &in) {
+    int x, y, id;
+
+    while (true) {
+        in >> x;
+        if (x == -1) break;
+        in >> y; in >> id;
+        //friends.push_back(*FriendFactory::createFriend(x, y, id));
+    }
+}
+
+void Level::readEnemy(ifstream &in) {
+    int x, y, id;
+
+    while (true) {
+        in >> x;
+        if (x == -1) break;
+        in >> y; in >> id;
+        enemies.push_back(*EnemyFactory::createEnemy(x, y, id));
+    }
+}
+
+void Level::readItem(ifstream &in) {
+    int x, y, id;
+
+    while (true) {
+        in >> x;
+        if (x == -1) break;
+        in >> y; in >> id;
+        items.push_back(*ItemFactory::createItem(x, y, id));
+    }
+}
+
+void Level::readEndPoint(ifstream &in) {
+    in >> endPoint.left; in >> endPoint.top;
+    //in >> endPoint.width; in >> endPoint.height;
 }
 
 void Level::drawMap(RenderWindow &window) {
@@ -160,7 +181,7 @@ void Level::draw(RenderWindow &window) {
     drawBackground(window);
     drawEnemies(window);
     //drawFriends(window);
-    //drawItems(window);
+    drawItems(window);
     drawMap(window);
 }
 
@@ -168,11 +189,18 @@ void Level::worldUpdate(Player &player, Clock &clock, Vector2f viewCenter) {
     viewCord = viewCenter;
 
     for (int i = 0; i < enemies.size(); i++) {
-        if (enemies.at(i).playerIntersection(player)) {
-            battle.start(enemies.at(i));
-            enemies.erase(enemies.begin() + i);
-            clock.restart();
+        if (enemies.at(i).getHitBox().left > viewCord.x - 960 && enemies.at(i).getHitBox().left < viewCord.x + 960 &&
+            enemies.at(i).getHitBox().top > viewCord.y - 540 && enemies.at(i).getHitBox().top < viewCord.y + 540) {
+            if (enemies.at(i).playerIntersection(player)) {
+                battle.start(enemies.at(i));
+                enemies.erase(enemies.begin() + i);
+                clock.restart();
+            }
         }
+    }
+
+    if (endPoint.intersects(player.hitBox)) {
+        return;
     }
 }
 

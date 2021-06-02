@@ -9,6 +9,7 @@
 #include <vector>
 
 using namespace sf;
+using namespace std;
 
 class Level {
 public: 
@@ -17,10 +18,11 @@ public:
 	Texture backgroundTexture;
 	Texture tileSet;
 	RectangleShape tile;
+	FloatRect endPoint;
 	Vector2i mapSize, tileIDcord;
 	Vector2f resolution, spawnPoint, viewCord;
 	Battle battle;
-	
+
 	std::vector <Item> items;
 	std::vector <Friend> friends;
 	std::vector <Enemy> enemies;
@@ -28,6 +30,11 @@ public:
 	int** map;
 	std::string fileName;
 	void calculateTile(int tileID);
+	void readSpawnPoint(ifstream &in);
+	void readFriend(ifstream &in);
+	void readEnemy(ifstream &in);
+	void readItem(ifstream &in);
+	void readEndPoint(ifstream &in);
 	void drawMap(RenderWindow& window);
 	void drawBackground(RenderWindow& window);
 	void drawEnemies(RenderWindow& window);

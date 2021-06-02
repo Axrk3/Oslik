@@ -5,7 +5,7 @@ Engine::Engine() {
 	resolution.y = VideoMode::getDesktopMode().height;
 
 	window.create(VideoMode(resolution.x, resolution.y), "OslikTheGame v0.9", Style::Fullscreen);
-	window.setFramerateLimit(60);
+	window.setFramerateLimit(120);
 
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
 }
@@ -29,47 +29,44 @@ void Engine::input(Event event, float time) {
 	}
 
 	if (event.type == Event::KeyPressed) {
-
-		if (event.key.code == (Keyboard::Escape)) {
+		switch (event.key.code)
+		{
+		case Keyboard::Escape:
 			menuIsOpen = true;
 			window.setMouseCursorVisible(menuIsOpen);
-		}
-
-		if (event.key.code == (Keyboard::A)) {
+			break;
+		case Keyboard::A:
 			player.moveLeft(time);
-		}
-
-		if (event.key.code == (Keyboard::D)) {
+			break;
+		case Keyboard::D:
 			player.moveRight(time);
-		}
-
-		if (event.key.code == (Keyboard::LShift)) {
+			break;
+		case Keyboard::LShift:
 			player.run();
-		}
-
-		if (event.key.code == (Keyboard::W)) {
+			break;
+		case Keyboard::W:
 			player.jump();
-		}
-
-		if (event.key.code == (Keyboard::I)) {
+			break;
+		case Keyboard::I:
 			inventoryIsOpen = !inventoryIsOpen;
 			window.setMouseCursorVisible(inventoryIsOpen);
+			break;
 		}
 	}
 
 	else if (event.type == Event::KeyReleased) {
-
-		if ((!Keyboard::isKeyPressed(Keyboard::D)) && !(Keyboard::isKeyPressed(Keyboard::A))) {
+		switch (event.key.code)
+		{
+		case Keyboard::D:
+		case Keyboard::A:
 			player.stopX();
-		}
-
-		if (event.key.code == (Keyboard::LShift) && !Keyboard::isKeyPressed(Keyboard::LShift)) {
+			if (Keyboard::isKeyPressed(Keyboard::A)) player.moveLeft(time);
+			if (Keyboard::isKeyPressed(Keyboard::D)) player.moveRight(time);
+			break;
+		case Keyboard::LShift:
 			player.stopRun();
-		}		
-
-		if (event.key.code == (Keyboard::D) && Keyboard::isKeyPressed(Keyboard::A)) player.moveLeft(time);
-		
-		if (event.key.code == (Keyboard::A) && Keyboard::isKeyPressed(Keyboard::D)) player.moveRight(time);
+			break;
+		}
 	}
 }
 
