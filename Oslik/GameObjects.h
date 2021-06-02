@@ -4,6 +4,8 @@
 
 using namespace sf;
 
+class Player;
+
 class GameObject {
 public:
 	FloatRect hitBox;
@@ -30,8 +32,10 @@ public:
 		sprite.setTexture(texture);
 	}
 
+	bool playerIntersection(Player &player);
 	//virtual void examine() = 0;
-	//virtual void use() = 0;
+	//virtual void use() = 0
+	
 	Sprite getSpriteInInventory();
 };
 
@@ -90,7 +94,7 @@ class Cell {
 public:
 	FloatRect hitBox;
 	Item *item;
-	bool isEmpty = true;
+	bool isEmpty;
 	int count = 0;
 
 	void drop();
@@ -99,6 +103,7 @@ public:
 class Inventory : public GameObject {
 public:
 	Cell cells[8];
+
 	RectangleShape attackBar, hpBar;
 	FloatRect buttons[3];
 	Vector2f mousePosition;
@@ -115,7 +120,6 @@ public:
 	void input();
 	void addItem(Item &item);
 	void menuLogic();
-	//void addItem(Equipment &item);
 	void update(Vector2f viewCenter);
 };
 

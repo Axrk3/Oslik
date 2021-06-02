@@ -199,6 +199,16 @@ void Level::worldUpdate(Player &player, Clock &clock, Vector2f viewCenter) {
         }
     }
 
+    for (int i = 0; i < items.size(); i++) {
+        if (items.at(i).getHitBox().left > viewCord.x - 960 && items.at(i).getHitBox().left < viewCord.x + 960 &&
+            items.at(i).getHitBox().top > viewCord.y - 540 && items.at(i).getHitBox().top < viewCord.y + 540) {
+            if (items.at(i).playerIntersection(player)) {
+                player.inventory.addItem(items.at(i));
+                items.erase(items.begin() + i);
+            }
+        }
+    }
+
     if (endPoint.intersects(player.hitBox)) {
         return;
     }

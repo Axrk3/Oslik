@@ -148,6 +148,15 @@ void Player::openInventory(RenderWindow &window) {
 
 }
 
+bool Item::playerIntersection(Player &player) {
+	if (hitBox.intersects(player.hitBox)) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
 Sprite Item::getSpriteInInventory() {
 	return spriteInInventory;
 }
@@ -176,6 +185,7 @@ Inventory::Inventory() {
 	for (int i = 0; i < 8; i++) {
 		cells[i].hitBox.width = 86;
 		cells[i].hitBox.height = 85;
+		cells[i].isEmpty = true;
 	}
 
 	/*for (int i = 0; i < 3; i++) {
@@ -272,11 +282,23 @@ void Inventory::update(Vector2f viewCenter) {
 
 	menuSprite.setPosition(cells[openedCell].hitBox.left + cells[openedCell].hitBox.width, cells[openedCell].hitBox.top);
 
+	for (int i = 0; i < 8; i++) {
+		if (!cells[i].isEmpty) {
+			cells[i].item->sprite.setPosition(cells[i].hitBox.left, cells[i].hitBox.top);
+		}
+	}
+
 	yDelimeter = 12;
 	for (int i = 0; i < 3; i++) {
-		buttons[i].left = menuSprite.getPosition().x + 14;
-		buttons[i].top = menuSprite.getPosition().y + yDelimeter;
-		yDelimeter += 26;
+		if (isClicked) {
+			buttons[i].left = menuSprite.getPosition().x + 14;
+			buttons[i].top = menuSprite.getPosition().y + yDelimeter;
+			yDelimeter += 26;
+		}
+		else {
+			buttons[i].left = 0; 
+			buttons[i].top = 0;
+		}
 	}
 
 	switch (activeButton)
@@ -298,9 +320,9 @@ void Inventory::update(Vector2f viewCenter) {
 
 void Inventory::addItem(Item &item) {
 	for (int i = 0; i < 8; i++) {
-		if (!cells[i].isEmpty) {
-			item.sprite.setPosition(cells[i].hitBox.left, cells[i].hitBox.top);
+		if (cells[i].isEmpty) {
 			cells[i].item = &item;
+			cells[i].item->sprite.setPosition(cells[i].hitBox.left, cells[i].hitBox.top);
 			cells[i].isEmpty = false;
 			break;
 		}
@@ -309,7 +331,6 @@ void Inventory::addItem(Item &item) {
 
 void Cell::drop() {
 	//Расширить до более, чем 1 предмета
-	item = 0;
 	isEmpty = true;
 }
 

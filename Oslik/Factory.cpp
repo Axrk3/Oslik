@@ -63,7 +63,9 @@ Item *ItemFactory::createItem(int x, int y, int id) {
 
 	newItem->hitBox.left = x;
 	newItem->hitBox.top = y;
-	newItem->sprite.setPosition(x,y);
+	newItem->sprite.setPosition(x, y);
+	newItem->hitBox.width = newItem->texture.getSize().x;
+	newItem->hitBox.height = newItem->texture.getSize().y;
 
 	return newItem;
 }
