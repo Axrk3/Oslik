@@ -51,9 +51,20 @@ void GameMenu::menuInput() {
 	}
 }
 
-// Костыль! Переделать
+
 void GameMenu::menuLogic() {
-	
+	switch (activeButton)
+	{
+	case 0:
+		closeMenu = true;
+		break;
+	case 1:
+		makeSave = true;
+		break;
+	case 2:
+		closeGame = true;
+		break;
+	}
 }
 
 void GameMenu::drawMenu(RenderWindow &window) {
@@ -63,16 +74,20 @@ void GameMenu::drawMenu(RenderWindow &window) {
 }
 
 int GameMenu::invokeMenu(RenderWindow &window) {
-	//good jopa
+	
 	while (true) {
 		menuInput();
 		if (closeMenu) {
 			closeMenu = false;
-			return false;
+			return 0;
+		}
+		if (makeSave) {
+			makeSave = false;
+			return 1;
 		}
 		if (closeGame) {
 			closeGame = false;
-			return true;
+			return 2;
 		}
 		drawMenu(window);
 	}

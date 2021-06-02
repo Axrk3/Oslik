@@ -25,8 +25,7 @@ protected:
 	void menuInput();
 	void menuLogic();
 	void drawMenu(RenderWindow &window);
-	bool closeMenu = false;
-	bool closeGame = false;
+	bool closeMenu = false, closeGame = false, makeSave = false;
 public:
 	GameMenu();
 	int invokeMenu(RenderWindow &window);

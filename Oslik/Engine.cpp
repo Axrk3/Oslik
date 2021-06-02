@@ -67,10 +67,9 @@ void Engine::input(Event event, float time) {
 			player.stopRun();
 		}		
 
-		if (event.key.code == (Keyboard::A) && Keyboard::isKeyPressed(Keyboard::D)) player.moveRight(time);
-
 		if (event.key.code == (Keyboard::D) && Keyboard::isKeyPressed(Keyboard::A)) player.moveLeft(time);
 		
+		if (event.key.code == (Keyboard::A) && Keyboard::isKeyPressed(Keyboard::D)) player.moveRight(time);
 	}
 }
 
@@ -109,14 +108,25 @@ void Engine::offset() {
 }
 
 int Engine::invokeGameMenu() {
+	gameMenuChoice = 1;
 	if (menuIsOpen) {
 		window.setMouseCursorVisible(true);
 		menuIsOpen = false;
-		if (menu.invokeMenu(window)) return 0;
+		switch (menu.invokeMenu(window)) {
+		case 0:
+			gameMenuChoice = 1;
+			break;
+		case 1:
+			//makeSave();
+			break;
+		case 2:
+			gameMenuChoice = 0;
+			break;
+		}
 		window.setMouseCursorVisible(false);
 		clock.restart();
 	}
-	return 1;
+	return gameMenuChoice;
 }
 
 void Engine::start() {
@@ -147,7 +157,6 @@ void Engine::start() {
 int Engine::startMainMenu() {
 	window.setMouseCursorVisible(true);
 	return mainMenu.invokeMenu(window);
-	window.setMouseCursorVisible(false);
 }
 
 void Engine::closeSession() {

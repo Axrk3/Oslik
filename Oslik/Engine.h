@@ -22,7 +22,7 @@ public:
 	Clock clock;
 	GameMenu menu;
 	MainMenu mainMenu;
-	int offsetX, offsetY;
+	int offsetX, offsetY, gameMenuChoice;
 	float time;
 	bool menuIsOpen = false, inventoryIsOpen, closeGame = false;
 	void initialization();
@@ -34,6 +34,7 @@ public:
 	void loading();
 	void closeSession();
 	void drawInventory();
+	void makeSave();
 public:
 	Engine();
 	void start();
