@@ -48,7 +48,7 @@ void Player::update(float time, Vector2f viewCenter) {
 	collisionY();
 
 	animation.tick(time);
-	inventory.update(viewCenter);
+	inventory.update(this->getStats(), viewCenter);
 	sprite.setPosition(hitBox.left, hitBox.top);
 }
 
@@ -145,28 +145,25 @@ void Player::collisionY() {
 	}
 }
 
-void Player::openInventory(RenderWindow &window) {
-
+void Player::openInventory(RenderWindow &window, Vector2f viewCenter) {
+	window.clear(Color::White);
+	inventory.input(*this);
+	inventory.draw(window);
+	inventory.update(this->getStats(), viewCenter);
+	window.display();
 }
 
 Item::Item(String _name, int _coefficient) {
 	name = _name;
 	coefficient = _coefficient;
-	texture.loadFromFile(_name + ".png");
+
+	texture.loadFromFile(name + ".png");
 	sprite.setTexture(texture);
-	std::ifstream in("Discription.txt");
-	std::string line;
-	while (!in.eof()) {
-		getline(in, line);
-		if (line.compare(name)) {
-			getline(in, discription);
-			std::cout << discription << std::endl;
-			break;
-		}
-	}
-	in.close();
 }
 
+String Item::examine() {
+	return discription;
+}
 
 bool Item::playerIntersection(Player &player) {
 	if (hitBox.intersects(player.hitBox)) {
@@ -183,7 +180,30 @@ Sprite Item::getSpriteInInventory() {
 
 
 void HealthPotion::use(Player &player) {
-	player.stats.HP += coefficient;
+	if (player.stats.HP + coefficient > 100) {
+		player.stats.HP = 100;
+	}
+	else {
+		player.stats.HP += coefficient;
+	}
+}
+
+void StrengthPotion::use(Player& player) {
+	if (player.stats.ATK + coefficient > 50) {
+		player.stats.ATK = 50;
+	}
+	else {
+		player.stats.ATK += coefficient;
+	}
+}
+
+void ResistancePotion::use(Player &player) {
+	if (player.stats.DEF + coefficient > 50) {
+		player.stats.DEF = 50;
+	}
+	else {
+		player.stats.DEF += coefficient;
+	}
 }
 
 Inventory::Inventory() {
@@ -198,9 +218,11 @@ Inventory::Inventory() {
 	menuSprite.setTextureRect(IntRect(0, 0, 127, 95));
 
 	buttonSprite.setTexture(menuTexture);
+	
+	inventoryBars[0].setFillColor(Color(220, 20, 60, 255));
+	inventoryBars[1].setFillColor(Color(215, 123, 186, 255));
+	inventoryBars[2].setFillColor(Color(99, 155, 255, 255));
 
-	attackBar.setPosition(1248, 328);
-	attackBar.setFillColor(Color::Red);
 
 	for (int i = 0; i < 3; i++) {
 		buttons[i].width = 99;
@@ -213,11 +235,10 @@ Inventory::Inventory() {
 		cells[i].isEmpty = true;
 	}
 
-	/*for (int i = 0; i < 3; i++) {
-		if (i % 2 == 0) {
-			items[i].rect.setPosition(540, 320);
-		}
-	}*/
+	font.loadFromFile("times.ttf");
+	text.setFont(font);
+	text.setCharacterSize(28);
+	text.setFillColor(Color::Black);
 }
 
 void Inventory::input(Player &player) {
@@ -226,6 +247,7 @@ void Inventory::input(Player &player) {
 
 	if (Mouse::isButtonPressed(Mouse::Button::Left)) {
 		isClicked = false;
+		isExamine = false;
 	}
 
 	for (int i = 0; i < 8; i++) {
@@ -259,27 +281,25 @@ void Inventory::menuLogic(Player &player) {
 	switch (activeButton)
 	{
 	case 0:
-		//cells[openedCell].item->examine();
-		std::cout << "examine\n";
+		text.setString(cells[openedCell].item->examine());
+		isExamine = true;
 		break;
 	case 1:
-		std::cout << player.stats.HP;
 		cells[openedCell].item->use(player);
-		std::cout << "use\n";
-		std::cout << player.stats.HP;
 		cells[openedCell].drop();
 		break;
 	case 2:
 		cells[openedCell].drop();
-		std::cout << "drop\n";
 		break;
 	}
 }
 
 void Inventory::draw(RenderWindow &window) {
 	window.draw(sprite);
-	window.draw(attackBar);
-	window.draw(hpBar);
+	
+	for (int i = 0; i < 3; i++) {
+		window.draw(inventoryBars[i]);
+	}
 
 	for (int i = 0; i < 8; i++) {
 		if (!cells[i].isEmpty) {
@@ -287,6 +307,10 @@ void Inventory::draw(RenderWindow &window) {
 		}
 	}
 	
+	if (isExamine) {
+		window.draw(text);
+	}
+
 	if (isClicked) {
 		window.draw(menuSprite);
 
@@ -296,7 +320,7 @@ void Inventory::draw(RenderWindow &window) {
 	}
 }
 
-void Inventory::update(Vector2f viewCenter) {
+void Inventory::update(Character::characteristics stats, Vector2f viewCenter) {
 	sprite.setPosition(viewCenter.x - 480, viewCenter.y - 270);
 
 	int firstÑolumn = 61, secondÑolumn = 160;
@@ -307,8 +331,21 @@ void Inventory::update(Vector2f viewCenter) {
 		cells[i].hitBox.top = cells[i + 1].hitBox.top = sprite.getPosition().y + yDelimeter;
 		yDelimeter += 96;
  	}
+	
+	double modifier = 128.0 / stats.HP;
+
+	inventoryBars[0].setSize(Vector2f(modifier * stats.HP, 25));
+	inventoryBars[1].setSize(Vector2f(2.56 * stats.ATK, 25));
+	inventoryBars[2].setSize(Vector2f(2.56 * stats.DEF, 25));
+
+	yDelimeter = 58;
+	for (int i = 0; i < 3; i++) {
+		inventoryBars[i].setPosition(sprite.getPosition().x + 768, sprite.getPosition().y + yDelimeter);
+		yDelimeter += 48;
+	}
 
 	menuSprite.setPosition(cells[openedCell].hitBox.left + cells[openedCell].hitBox.width, cells[openedCell].hitBox.top);
+	text.setPosition(sprite.getPosition().x + 285, sprite.getPosition().y + 365);
 
 	for (int i = 0; i < 8; i++) {
 		if (!cells[i].isEmpty) {
@@ -355,8 +392,6 @@ void Inventory::addItem(Item &item) {
 		}
 	}
 }
-
-
 
 void Cell::drop() {
 	delete item;

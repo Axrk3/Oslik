@@ -6,6 +6,7 @@ Engine::Engine() {
 
 	window.create(VideoMode(resolution.x, resolution.y), "OslikTheGame v0.9", Style::Fullscreen);
 	window.setFramerateLimit(120);
+	window.setFramerateLimit(120);
 
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
 }
@@ -82,7 +83,7 @@ void Engine::draw() {
 void Engine::drawInventory() {
 	if (inventoryIsOpen) {
 		player.inventory.draw(window);
-		player.inventory.update(view.getCenter());
+		player.inventory.update(player.getStats(), view.getCenter());
 	}
 }
 

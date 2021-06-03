@@ -20,18 +20,16 @@ public:
 
 class Item : public GameObject {
 protected:
-	String name;
-	std::string discription;
+	String name, discription;
 	int coefficient;
 	Texture textureInInventory;
 	Sprite spriteInInventory;
 public:
 	Item(String _name, int _coefficient);
 
-	bool playerIntersection(Player& player);
-	//virtual void examine() = 0;
+	virtual bool playerIntersection(Player &player);
 	virtual void use(Player &player) {};
-	virtual void examine() {};
+	virtual String examine();
 	
 	Sprite getSpriteInInventory();
 };
@@ -44,19 +42,19 @@ public:
 
 class Helmet : public Equipment {
 public:
-	Helmet(String _name, int _coefficient) : Equipment(_name, _coefficient) {};
+	Helmet(String _name, int _coefficient) : Equipment(_name, _coefficient) { discription = "Gives 3 points of armor while equiped."; };
 	void putOn();
 };
 
 class Saddle : public Equipment {
 public:
-	Saddle(String _name, int _coefficient) : Equipment(_name, _coefficient) {};
+	Saddle(String _name, int _coefficient) : Equipment(_name, _coefficient) { discription = "Gives 5 points of armor while equiped."; };
 	void putOn();
 };
 
 class Horseshoe : public Equipment {
 public:
-	Horseshoe(String _name, int _coefficient) : Equipment(_name, _coefficient) {};
+	Horseshoe(String _name, int _coefficient) : Equipment(_name, _coefficient) { discription = "Gives 2 points of armor while equiped."; };
 	void putOn();
 };
 
@@ -68,23 +66,22 @@ public:
 
 class HealthPotion : public Consumable {
 private:
-	
+
 public: 
-	HealthPotion(String _name, int _coefficient) : Consumable(_name, _coefficient) {};
-	//void consume(Player &player);
+	HealthPotion(String _name, int _coefficient) : Consumable(_name, _coefficient) { discription = "Heals 10 HP."; };
 	void use(Player &player);
 };
 
 class StrengthPotion : public Consumable {
 public:
-	StrengthPotion(String _name, int _coefficient) : Consumable(_name, _coefficient) {};
-	void consume();
+	StrengthPotion(String _name, int _coefficient) : Consumable(_name, _coefficient) { discription = "Increases strenght by one."; };
+	void use(Player &player);
 };
 
 class ResistancePotion : public Consumable {
 public:
-	ResistancePotion(String _name, int _coefficient) : Consumable(_name, _coefficient) {};
-	void consume();
+	ResistancePotion(String _name, int _coefficient) : Consumable(_name, _coefficient) { discription = "Increases armor by one."; };
+	void use(Player &player);
 };
 
 class Cell {
@@ -96,29 +93,6 @@ public:
 	int count = 0;
 
 	void drop();
-};
-
-class Inventory : public GameObject {
-public:
-	Cell cells[8];
-
-	RectangleShape attackBar, hpBar;
-	FloatRect buttons[3];
-	Vector2f mousePosition;
-	int quantityConsum, quantityEquip, openedCell, activeButton;
-	
-
-	Texture menuTexture;
-	Sprite menuSprite, buttonSprite;
-
-	bool isClicked = false;
-public:
-	Inventory();
-	void draw(RenderWindow &window);
-	void input(Player &player);
-	void addItem(Item &item);
-	void menuLogic(Player &player);
-	void update(Vector2f viewCenter);
 };
 
 class Character : public GameObject {
@@ -135,6 +109,31 @@ public:
 	void setAnimationTexture();
 	void attack();
 	characteristics getStats();
+};
+
+class Inventory : public GameObject {
+public:
+	Cell cells[8];
+
+	RectangleShape inventoryBars[3];
+	FloatRect buttons[3];
+	Vector2f mousePosition;
+	int quantityConsum, quantityEquip, openedCell, activeButton;
+	
+
+	Texture menuTexture;
+	Sprite menuSprite, buttonSprite;
+	Font font;
+	Text text;
+	
+	bool isClicked = false, isExamine = false;
+public:
+	Inventory();
+	void draw(RenderWindow &window);
+	void input(Player &player);
+	void addItem(Item &item);
+	void menuLogic(Player &player);
+	void update(Character::characteristics stats, Vector2f viewCenter);
 };
 
 class Player : public Character {
@@ -156,7 +155,7 @@ public:
 	void gravity(float time);
 	void collisionX();
 	void collisionY();
-	void openInventory(RenderWindow& window);
+	void openInventory(RenderWindow& window, Vector2f viewCenter);
 };
 
 class Friend : public GameObject {

@@ -261,6 +261,11 @@ void Battle::actionProcessing() {
 			isBlocked = true;
 			break;
 		case 2:
+			window->setMouseCursorVisible(true);
+			while (!Keyboard::isKeyPressed(Keyboard::Escape)) {
+				player->openInventory(*window, battleView.getCenter());
+			}
+			window->setMouseCursorVisible(false);
 			isAction = true;
 			break;
 		case 3:
@@ -270,7 +275,7 @@ void Battle::actionProcessing() {
 	}
 }
 
-void Battle::defenceUp(Character& defender) {
+void Battle::defenceUp(Character &defender) {
 	defender.stats.DEF *= 2;
 }
 
