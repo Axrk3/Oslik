@@ -1,4 +1,5 @@
 #include "GameObjects.h"
+#include <fstream>
 #include <iostream>
 
 
@@ -148,6 +149,25 @@ void Player::openInventory(RenderWindow &window) {
 
 }
 
+Item::Item(String _name, int _coefficient) {
+	name = _name;
+	coefficient = _coefficient;
+	texture.loadFromFile(_name + ".png");
+	sprite.setTexture(texture);
+	std::ifstream in("Discription.txt");
+	std::string line;
+	while (!in.eof()) {
+		getline(in, line);
+		if (line.compare(name)) {
+			getline(in, discription);
+			std::cout << discription << std::endl;
+			break;
+		}
+	}
+	in.close();
+}
+
+
 bool Item::playerIntersection(Player &player) {
 	if (hitBox.intersects(player.hitBox)) {
 		return 1;
@@ -159,6 +179,11 @@ bool Item::playerIntersection(Player &player) {
 
 Sprite Item::getSpriteInInventory() {
 	return spriteInInventory;
+}
+
+
+void HealthPotion::use(Player &player) {
+	player.stats.HP += coefficient;
 }
 
 Inventory::Inventory() {
@@ -195,7 +220,7 @@ Inventory::Inventory() {
 	}*/
 }
 
-void Inventory::input() {
+void Inventory::input(Player &player) {
 	mousePosition.x = sprite.getPosition().x - 480 + Mouse::getPosition().x;
 	mousePosition.y = sprite.getPosition().y - 270 + Mouse::getPosition().y;
 
@@ -220,7 +245,7 @@ void Inventory::input() {
 			mousePosition.y >= buttons[i].top && mousePosition.y <= buttons[i].top + buttons[i].height) {
 			activeButton = i;
 			if (Mouse::isButtonPressed(Mouse::Button::Left)) {
-				menuLogic();
+				menuLogic(player);
 			}
 			break;
 		}
@@ -230,7 +255,7 @@ void Inventory::input() {
 	}
 }
 
-void Inventory::menuLogic() {
+void Inventory::menuLogic(Player &player) {
 	switch (activeButton)
 	{
 	case 0:
@@ -238,8 +263,11 @@ void Inventory::menuLogic() {
 		std::cout << "examine\n";
 		break;
 	case 1:
-		//cells[openedCell].item->use();
+		std::cout << player.stats.HP;
+		cells[openedCell].item->use(player);
 		std::cout << "use\n";
+		std::cout << player.stats.HP;
+		cells[openedCell].drop();
 		break;
 	case 2:
 		cells[openedCell].drop();
@@ -327,6 +355,8 @@ void Inventory::addItem(Item &item) {
 		}
 	}
 }
+
+
 
 void Cell::drop() {
 	delete item;

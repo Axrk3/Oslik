@@ -21,20 +21,17 @@ public:
 class Item : public GameObject {
 protected:
 	String name;
+	std::string discription;
 	int coefficient;
 	Texture textureInInventory;
 	Sprite spriteInInventory;
 public:
-	Item(String _name, int _coefficient) {
-		name = _name;
-		coefficient = _coefficient;
-		texture.loadFromFile(_name + ".png");
-		sprite.setTexture(texture);
-	}
+	Item(String _name, int _coefficient);
 
-	bool playerIntersection(Player &player);
+	bool playerIntersection(Player& player);
 	//virtual void examine() = 0;
-	//virtual void use() = 0
+	virtual void use(Player &player) {};
+	virtual void examine() {};
 	
 	Sprite getSpriteInInventory();
 };
@@ -74,7 +71,8 @@ private:
 	
 public: 
 	HealthPotion(String _name, int _coefficient) : Consumable(_name, _coefficient) {};
-	void consume();
+	//void consume(Player &player);
+	void use(Player &player);
 };
 
 class StrengthPotion : public Consumable {
@@ -117,9 +115,9 @@ public:
 public:
 	Inventory();
 	void draw(RenderWindow &window);
-	void input();
+	void input(Player &player);
 	void addItem(Item &item);
-	void menuLogic();
+	void menuLogic(Player &player);
 	void update(Vector2f viewCenter);
 };
 

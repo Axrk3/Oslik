@@ -25,7 +25,7 @@ void Engine::initialization() {
 
 void Engine::input(Event event, float time) {
 	if (inventoryIsOpen) {
-		player.inventory.input();
+		player.inventory.input(player);
 	}
 
 	if (event.type == Event::KeyPressed) {
