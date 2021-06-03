@@ -329,7 +329,8 @@ void Inventory::addItem(Item &item) {
 }
 
 void Cell::drop() {
-	//Расширить до более, чем 1 предмета
+	delete item;
+	item = 0;
 	isEmpty = true;
 }
 

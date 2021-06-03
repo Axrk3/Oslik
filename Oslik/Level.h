@@ -26,7 +26,7 @@ public:
 	std::vector <Item*> items;
 	std::vector <Friend> friends;
 	std::vector <Enemy> enemies;
-	int tileSetWidth,blockSize;
+	int tileSetWidth, blockSize;
 	int** map;
 	std::string fileName;
 	void calculateTile(int tileID);
