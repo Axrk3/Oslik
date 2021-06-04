@@ -121,7 +121,7 @@ int Engine::invokeGameMenu() {
 			gameMenuChoice = 1;
 			break;
 		case 1:
-			//makeSave();
+			lvl.makeSave("saveFile.txt");
 			break;
 		case 2:
 			gameMenuChoice = 0;

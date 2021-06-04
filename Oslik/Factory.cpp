@@ -42,22 +42,22 @@ Item *ItemFactory::createItem(int x, int y, int id) {
 	switch (id)
 	{
 	case 1:
-		newItem = new Helmet("Helmet", 3);
+		newItem = new Helmet("Helmet", id, 3);
 		break;
 	case 2:
-		newItem = new Saddle("Saddle", 5);
+		newItem = new Saddle("Saddle", id, 5);
 		break;
 	case 3:
-		newItem = new Horseshoe("Horseshoe", 2);
+		newItem = new Horseshoe("Horseshoe", id, 2);
 		break;
 	case 4:
-		newItem = new HealthPotion("HealthPotion", 10);
+		newItem = new HealthPotion("HealthPotion", id, 10);
 		break;
 	case 5:
-		newItem = new StrengthPotion("StrengthPotion", 1);
+		newItem = new StrengthPotion("StrengthPotion", id, 1);
 		break;
 	default:
-		newItem = new ResistancePotion("ResistancePotion", 1);
+		newItem = new ResistancePotion("ResistancePotion", id, 1);
 		break;
 	}
 

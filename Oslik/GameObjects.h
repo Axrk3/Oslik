@@ -21,7 +21,7 @@ public:
 class Item : public GameObject {
 protected:
 	String name, discription;
-	int coefficient;
+	int coefficient, id;
 	Texture textureInInventory;
 	Sprite spriteInInventory;
 public:
@@ -30,7 +30,8 @@ public:
 	virtual bool playerIntersection(Player &player);
 	virtual void use(Player &player) {};
 	virtual String examine();
-	
+	virtual int getID();
+
 	Sprite getSpriteInInventory();
 };
 
@@ -42,19 +43,28 @@ public:
 
 class Helmet : public Equipment {
 public:
-	Helmet(String _name, int _coefficient) : Equipment(_name, _coefficient) { discription = "Gives 3 points of armor while equiped."; };
+	Helmet(String _name, int _id, int _coefficient) : Equipment(_name, _coefficient) { 
+		discription = "Gives 3 points of armor while equiped."; 
+		id = _id;
+	};
 	void putOn();
 };
 
 class Saddle : public Equipment {
 public:
-	Saddle(String _name, int _coefficient) : Equipment(_name, _coefficient) { discription = "Gives 5 points of armor while equiped."; };
+	Saddle(String _name, int _id, int _coefficient) : Equipment(_name, _coefficient) { 
+		discription = "Gives 5 points of armor while equiped."; 
+		id = _id;
+	};
 	void putOn();
 };
 
 class Horseshoe : public Equipment {
 public:
-	Horseshoe(String _name, int _coefficient) : Equipment(_name, _coefficient) { discription = "Gives 2 points of armor while equiped."; };
+	Horseshoe(String _name, int _id, int _coefficient) : Equipment(_name, _coefficient) { 
+		discription = "Gives 2 points of armor while equiped.";
+		id = _id;
+	};
 	void putOn();
 };
 
@@ -68,19 +78,28 @@ class HealthPotion : public Consumable {
 private:
 
 public: 
-	HealthPotion(String _name, int _coefficient) : Consumable(_name, _coefficient) { discription = "Heals 10 HP."; };
+	HealthPotion(String _name, int _id, int _coefficient) : Consumable(_name, _coefficient) { 
+		discription = "Heals 10 HP."; 
+		id = _id;
+	};
 	void use(Player &player);
 };
 
 class StrengthPotion : public Consumable {
 public:
-	StrengthPotion(String _name, int _coefficient) : Consumable(_name, _coefficient) { discription = "Increases strenght by one."; };
+	StrengthPotion(String _name, int _id, int _coefficient) : Consumable(_name, _coefficient) { 
+		discription = "Increases strenght by one.";
+		id = _id;
+	};
 	void use(Player &player);
 };
 
 class ResistancePotion : public Consumable {
 public:
-	ResistancePotion(String _name, int _coefficient) : Consumable(_name, _coefficient) { discription = "Increases armor by one."; };
+	ResistancePotion(String _name, int _id, int _coefficient) : Consumable(_name, _coefficient) { 
+		discription = "Increases armor by one.";
+		id = _id;
+	};
 	void use(Player &player);
 };
 
@@ -160,7 +179,10 @@ public:
 };
 
 class Friend : public GameObject {
-
+protected:
+	int id;
+public:
+	int getID();
 };
 
 class Enemy : public Character {

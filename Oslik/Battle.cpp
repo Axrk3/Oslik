@@ -17,7 +17,7 @@ void Battle::start(Enemy &enemy) {
 	objectsInitialization(enemy);
 	exitFlag = false;
 
-	while (player->getStats().HP >= 0 && !enemies.empty() && !exitFlag) {
+	while (player->getStats().HP > 0 && !enemies.empty() && !exitFlag) {
 		draw();
 
 		cursorSprite.setPosition(currentPosition);
@@ -51,7 +51,7 @@ void Battle::objectsInitialization(Enemy &enemy) {
 }
 
 void Battle::menuInitialization() {
-	menuTexture.loadFromFile("menu.png");
+	menuTexture.loadFromFile("battleMenu.png");
 	menuSprite.setTexture(menuTexture);
 	menuSprite.setPosition(0, resolution.y - 260);
 
@@ -83,7 +83,7 @@ void Battle::hpBarInitialization() {
 }
 
 void Battle::cursorInitialization() {
-	cursorTexture.loadFromFile("cursor.png");
+	cursorTexture.loadFromFile("battleCursor.png");
 	cursorSprite.setTexture(cursorTexture);
 
 	action.x = 0;

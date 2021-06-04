@@ -146,11 +146,15 @@ void Player::collisionY() {
 }
 
 void Player::openInventory(RenderWindow &window, Vector2f viewCenter) {
+	inventory.update(this->getStats(), viewCenter);
 	window.clear(Color::White);
 	inventory.input(*this);
 	inventory.draw(window);
-	inventory.update(this->getStats(), viewCenter);
 	window.display();
+}
+
+int Friend::getID() {
+	return id;
 }
 
 Item::Item(String _name, int _coefficient) {
@@ -178,6 +182,9 @@ Sprite Item::getSpriteInInventory() {
 	return spriteInInventory;
 }
 
+int Item::getID() {
+	return id;
+}
 
 void HealthPotion::use(Player &player) {
 	if (player.stats.HP + coefficient > 100) {
@@ -331,10 +338,8 @@ void Inventory::update(Character::characteristics stats, Vector2f viewCenter) {
 		cells[i].hitBox.top = cells[i + 1].hitBox.top = sprite.getPosition().y + yDelimeter;
 		yDelimeter += 96;
  	}
-	
-	double modifier = 128.0 / stats.HP;
 
-	inventoryBars[0].setSize(Vector2f(modifier * stats.HP, 25));
+	inventoryBars[0].setSize(Vector2f(1.28 * stats.HP, 25));
 	inventoryBars[1].setSize(Vector2f(2.56 * stats.ATK, 25));
 	inventoryBars[2].setSize(Vector2f(2.56 * stats.DEF, 25));
 
@@ -418,19 +423,6 @@ int Enemy::getID() {
 	return id;
 }
 
-Swordsman::Swordsman(int x, int y) {
-	hitBox.left = x;
-	hitBox.top = y;
-	hitBox.width = 150;
-	hitBox.height = 192;
-
-	id = 1;
-
-	texture.loadFromFile("Fister.png");
-	sprite.setTexture(texture);
-	sprite.setPosition(hitBox.left, hitBox.top);
-}
-
 Fister::Fister(int x, int y) {
 	hitBox.left = x;
 	hitBox.top = y;
@@ -440,6 +432,19 @@ Fister::Fister(int x, int y) {
 	stats.HP = 50;
 	stats.ATK = 20;
 	stats.DEF = 5;
+
+	id = 1;
+
+	texture.loadFromFile("Fister.png");
+	sprite.setTexture(texture);
+	sprite.setPosition(hitBox.left, hitBox.top);
+}
+
+Swordsman::Swordsman(int x, int y) {
+	hitBox.left = x;
+	hitBox.top = y;
+	hitBox.width = 150;
+	hitBox.height = 192;
 
 	id = 2;
 
