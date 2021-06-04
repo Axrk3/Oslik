@@ -1,15 +1,11 @@
 ﻿#include "Engine.h"
 
 Engine::Engine() {
-
-	InventoryBuffer.loadFromFile("openInventory.ogg");
-	InventorySound.setBuffer(InventoryBuffer);
-
+	inventorySoundBuffer.loadFromFile("openInventory.ogg");
 	resolution.x = VideoMode::getDesktopMode().width;
 	resolution.y = VideoMode::getDesktopMode().height;
 
 	window.create(VideoMode(resolution.x, resolution.y), "OslikTheGame v0.9", Style::Fullscreen);
-	window.setFramerateLimit(120);
 	window.setFramerateLimit(120);
 
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
@@ -19,12 +15,17 @@ void Engine::initialization() {
 	window.setMouseCursorVisible(false);
 	offsetX = resolution.x / 2;
 	offsetY = resolution.y / 2;
+	//Переместить в другое место
 	lvl.loadLVL(std::string("maps/lvl.txt"), player, window);
-	player.initialize("run.png", lvl.map, lvl.blockSize, lvl.spawnPoint);
-
+	player.initialize("run.png", lvl.map);
+	//offset();
+	//view.reset(FloatRect(offsetX - resolution.x / 2, offsetY - resolution.y / 2, resolution.x, resolution.y));
+	//view.setCenter(offsetX, offsetY);
+	//window.setView(view);
+	//
 	update(0);
 	draw();
-	sleep(milliseconds(100));
+	sleep(milliseconds(200));
 	clock.restart();
 }
 
@@ -59,7 +60,8 @@ void Engine::input(Event event, float time) {
 			player.jump();
 			break;
 		case Keyboard::I:
-			InventorySound.play();
+			sound.setBuffer(inventorySoundBuffer);
+			sound.play();
 			inventoryIsOpen = !inventoryIsOpen;
 			window.setMouseCursorVisible(inventoryIsOpen);
 			break;
@@ -126,7 +128,7 @@ int Engine::invokeGameMenu() {
 			gameMenuChoice = 1;
 			break;
 		case 1:
-			lvl.makeSave("saveFile.txt");
+			lvl.makeSave("maps/saveFile.txt", player);
 			break;
 		case 2:
 			gameMenuChoice = 0;

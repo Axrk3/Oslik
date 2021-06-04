@@ -6,7 +6,6 @@
 #include "Battle.h"
 #include <iostream>
 #include <string>
-#include <SFML/Audio.hpp>
 #include "Menu.h"
 
 using namespace sf;
@@ -24,8 +23,8 @@ public:
 	GameMenu menu;
 	MainMenu mainMenu;
 	Event event;
-	SoundBuffer InventoryBuffer;
-	Sound InventorySound;
+	SoundBuffer inventorySoundBuffer;
+	Sound sound;
 	bool clearEventPoll;
 
 	int offsetX, offsetY, gameMenuChoice;

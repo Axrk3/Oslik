@@ -19,22 +19,32 @@ Character::characteristics Character::getStats() {
 	return stats;
 }
 
-void Player::initialize(String fileName, int **&_map, int _blockSize, Vector2f spawnPoint) {
-	// ◊‡ÒÚ¸ ‚˚ÍËÌÛÚ¸ ‚ ÍÓÌÒÚÛÍÚÓ Ë Ò‰ÂÎ‡Ú¸ ÏÂÚÓ‰ ‰Îˇ ÒÏÂÌ˚ Í‡Ú˚
-	stats.HP = 100;
-	stats.ATK = 40;
-	stats.DEF = 10;
-	map = _map;
-	blockSize = _blockSize;
-	texture.loadFromFile(fileName);
-	sprite.setTexture(texture);
-	sprite.setTextureRect(IntRect(0, 0, 154, 119));
+void Character::setStats(characteristics _stats) {
+	stats.HP = _stats.HP;
+	stats.ATK = _stats.ATK;
+	stats.DEF = _stats.DEF;
+}
+
+Player::Player(){
+	hitBox = FloatRect(Vector2f(0, 0), Vector2f(154, 119));
 	animation.create("walk", texture, 0, 0, 154, 119, 7, 8, 154);
 	//animation.create("stay", texture, 0, 0, 210, 160, 8, 5, 210);
 	animation.create("stay", texture, 0, 0, 154, 119, 1, 0, 0);
 	animation.set("stay");
+}
+
+void Player::initialize(String fileName, int **&_map) {
+	// ◊‡ÒÚ¸ ‚˚ÍËÌÛÚ¸ ‚ ÍÓÌÒÚÛÍÚÓ Ë Ò‰ÂÎ‡Ú¸ ÏÂÚÓ‰ ‰Îˇ ÒÏÂÌ˚ Í‡Ú˚
+	stats.HP = 100;
+	stats.ATK = 40;
+	stats.DEF = 10;
+
+	map = _map;
+	blockSize = 64;
+	texture.loadFromFile(fileName);
+	sprite.setTexture(texture);
+	sprite.setTextureRect(IntRect(0, 0, 154, 119));
 	animation.play();
-	hitBox = FloatRect(spawnPoint, Vector2f(154, 119));
 	running = false;
 
 }
@@ -53,6 +63,7 @@ void Player::update(float time, Vector2f viewCenter) {
 }
 
 void Player::moveLeft(float time) {
+
 	animation.set("walk");
 	animation.flip(true);
 	dx = -speed;
@@ -145,10 +156,15 @@ void Player::collisionY() {
 	}
 }
 
+void Player::setSpawnPoint(Vector2f spawnPoint) {
+	hitBox.left = spawnPoint.x;
+	hitBox.top = spawnPoint.y;
+}
+
 void Player::openInventory(RenderWindow &window, Vector2f viewCenter) {
-	inventory.update(this->getStats(), viewCenter);
 	window.clear(Color::White);
 	inventory.input(*this);
+	inventory.update(this->getStats(), viewCenter);
 	inventory.draw(window);
 	window.display();
 }
@@ -313,10 +329,6 @@ void Inventory::draw(RenderWindow &window) {
 			window.draw(cells[i].item->getSprite());
 		}
 	}
-	
-	if (isExamine) {
-		window.draw(text);
-	}
 
 	if (isClicked) {
 		window.draw(menuSprite);
@@ -325,48 +337,68 @@ void Inventory::draw(RenderWindow &window) {
 			window.draw(buttonSprite);
 		}
 	}
+
+	if (isExamine) {
+		window.draw(text);
+	}
 }
 
 void Inventory::update(Character::characteristics stats, Vector2f viewCenter) {
 	sprite.setPosition(viewCenter.x - 480, viewCenter.y - 270);
 
-	int first—olumn = 61, second—olumn = 160;
-	int yDelimeter = 51;
+	updateCells();
+
+	updateBars(stats);
+
+	menuSprite.setPosition(cells[openedCell].hitBox.left + cells[openedCell].hitBox.width, cells[openedCell].hitBox.top);
+	text.setPosition(sprite.getPosition().x + 285, sprite.getPosition().y + 365);
+
+	updateItemsIcons();
+
+	updateButtons();
+}
+
+void Inventory::updateCells() {
+	int first—olumn = 61, second—olumn = 160, yDelimeter = 51;
 	for (int i = 0; i < 7; i += 2) {
 		cells[i].hitBox.left = sprite.getPosition().x + first—olumn;
 		cells[i + 1].hitBox.left = sprite.getPosition().x + second—olumn;
 		cells[i].hitBox.top = cells[i + 1].hitBox.top = sprite.getPosition().y + yDelimeter;
 		yDelimeter += 96;
- 	}
+	}
+}
+
+void Inventory::updateBars(Character::characteristics stats) {
+	int x = 768, yDelimeter = 58, step = 48;
+	for (int i = 0; i < 3; i++) {
+		inventoryBars[i].setPosition(sprite.getPosition().x + x, sprite.getPosition().y + yDelimeter);
+		yDelimeter += step;
+	}
 
 	inventoryBars[0].setSize(Vector2f(1.28 * stats.HP, 25));
 	inventoryBars[1].setSize(Vector2f(2.56 * stats.ATK, 25));
 	inventoryBars[2].setSize(Vector2f(2.56 * stats.DEF, 25));
+}
 
-	yDelimeter = 58;
-	for (int i = 0; i < 3; i++) {
-		inventoryBars[i].setPosition(sprite.getPosition().x + 768, sprite.getPosition().y + yDelimeter);
-		yDelimeter += 48;
-	}
-
-	menuSprite.setPosition(cells[openedCell].hitBox.left + cells[openedCell].hitBox.width, cells[openedCell].hitBox.top);
-	text.setPosition(sprite.getPosition().x + 285, sprite.getPosition().y + 365);
-
+void Inventory::updateItemsIcons() {
 	for (int i = 0; i < 8; i++) {
 		if (!cells[i].isEmpty) {
 			cells[i].item->sprite.setPosition(cells[i].hitBox.left, cells[i].hitBox.top);
 		}
 	}
+}
 
-	yDelimeter = 12;
+void Inventory::updateButtons() {
+	int x = 14, yDelimeter = 12, step = 26;
+
 	for (int i = 0; i < 3; i++) {
 		if (isClicked) {
-			buttons[i].left = menuSprite.getPosition().x + 14;
+			buttons[i].left = menuSprite.getPosition().x + x;
 			buttons[i].top = menuSprite.getPosition().y + yDelimeter;
-			yDelimeter += 26;
+			yDelimeter += step;
 		}
 		else {
-			buttons[i].left = 0; 
+			buttons[i].left = 0;
 			buttons[i].top = 0;
 		}
 	}
@@ -381,7 +413,7 @@ void Inventory::update(Character::characteristics stats, Vector2f viewCenter) {
 		buttonSprite.setTextureRect(IntRect(0, 116, 99, 19));
 		buttonSprite.setPosition(buttons[1].left, buttons[1].top);
 		break;
-	case 2: 
+	case 2:
 		buttonSprite.setTextureRect(IntRect(0, 136, 99, 19));
 		buttonSprite.setPosition(buttons[2].left, buttons[2].top);
 		break;
@@ -396,6 +428,11 @@ void Inventory::addItem(Item &item) {
 			break;
 		}
 	}
+}
+
+void Inventory::addItem(Item &item, int index) {
+	cells[index].item = &item;
+	cells[index].isEmpty = false;
 }
 
 void Inventory::clear() {

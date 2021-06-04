@@ -13,7 +13,7 @@ private:
 	
 	double hpModifier;
 	bool isAction, isBlocked, exitFlag, inventoryIsOpen;
-
+	
 	Texture menuTexture, cursorTexture;
 	Sprite menuSprite, cursorSprite;
 	Vector2f resolution, barSize, hpBarSize, currentPosition;

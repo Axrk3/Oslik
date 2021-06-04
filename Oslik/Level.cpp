@@ -5,12 +5,12 @@ Level::Level() {
 	resolution.y = VideoMode::getDesktopMode().height;
 }
 
-void Level::loadLVL(const string fileName, Player& _player, RenderWindow& _window) {
+void Level::loadLVL(const string fileName, Player &player, RenderWindow &_window) {
 	window = &_window;
 	string line, path = "maps/";
 	int x, y, num;
 
-	battle.create(_player, *window);
+	battle.create(player, *window);
 
 	ifstream in(fileName);
 	if (in.is_open()) {
@@ -49,11 +49,13 @@ void Level::loadLVL(const string fileName, Player& _player, RenderWindow& _windo
 
 		while (!in.eof()) {
 			getline(in, line);
-			if (!line.compare("SPAWN_POINT")) readSpawnPoint(in);
+			if (!line.compare("SPAWN_POINT")) readSpawnPoint(in, player);
 			if (!line.compare("FRIEND")) readFriend(in);
 			if (!line.compare("ENEMY")) readEnemy(in);
 			if (!line.compare("ITEM")) readItem(in);
 			if (!line.compare("END")) readEndPoint(in);
+			if (!line.compare("STATS")) readStats(in, player);
+			if (!line.compare("INVENTORY")) readInventory(in, player);
 		}
 	}
 	in.close();
@@ -70,11 +72,12 @@ void Level::calculateTile(int tileID) {
 	tile.setTextureRect(IntRect(tileIDcord.x, tileIDcord.y, blockSize, blockSize));
 }
 
-void Level::readSpawnPoint(ifstream& in) {
+void Level::readSpawnPoint(ifstream &in, Player &player) {
 	in >> spawnPoint.x; in >> spawnPoint.y;
+	player.setSpawnPoint(spawnPoint);
 }
 
-void Level::readFriend(ifstream& in) {
+void Level::readFriend(ifstream &in) {
 	int x, y, id;
 
 	while (true) {
@@ -85,7 +88,7 @@ void Level::readFriend(ifstream& in) {
 	}
 }
 
-void Level::readEnemy(ifstream& in) {
+void Level::readEnemy(ifstream &in) {
 	int x, y, id;
 
 	while (true) {
@@ -96,7 +99,7 @@ void Level::readEnemy(ifstream& in) {
 	}
 }
 
-void Level::readItem(ifstream& in) {
+void Level::readItem(ifstream &in) {
 	int x, y, id;
 
 	while (true) {
@@ -112,14 +115,35 @@ void Level::readEndPoint(ifstream& in) {
 	//in >> endPoint.width; in >> endPoint.height;
 }
 
-void Level::makeSave(const string saveFile) {
+void Level::readStats(ifstream &in, Player &player) {
+	Character::characteristics stats;
+	in >> stats.HP; in >> stats.ATK; in >> stats.DEF;
+
+	player.setStats(stats);
+}
+
+void Level::readInventory(ifstream &in, Player &player) {
+	int id;
+	for (int i = 0; i < 8; i++) {
+		in >> id;
+		if (id > 0) {
+			player.inventory.addItem(*ItemFactory::createItem(0, 0, id), i);
+		}
+	}
+}
+
+void Level::makeSave(const string saveFile, Player &player) {
 	ofstream out(saveFile);
 	if (out.is_open()) {
 		writeMap(out);
+		writeSpawnPoint(out, player.getHitBox());
 		//writeFriend(out);
 		writeEnemy(out);
 		writeItem(out);
 		writeEndPoint(out);
+		writeStats(out, player.getStats());
+		writeInventory(out, player.inventory.cells);
+		out << "-1";
 	}
 	out.close();
 }
@@ -139,7 +163,13 @@ void Level::writeMap(ofstream &out) {
 	}
 }
 
-void Level::writeFriend(ofstream& out) {
+void Level::writeSpawnPoint(ofstream &out, FloatRect position) {
+	out << "-1\n";
+	out << "SPAWN_POINT\n";
+	out << (int)position.left << ' ' << (int)position.top << '\n';
+}
+
+void Level::writeFriend(ofstream &out) {
 	out << "-1\n";
 	out << "FRIEND\n";
 	for (int i = 0; i < friends.size(); i++) {
@@ -153,7 +183,6 @@ void Level::writeEnemy(ofstream &out) {
 	for (int i = 0; i < enemies.size(); i++) {
 		out << enemies.at(i).getHitBox().left << ' ' << enemies.at(i).getHitBox().top << ' ' << enemies.at(i).getID() << '\n';
 	}
-
 }
 
 void Level::writeItem(ofstream &out) {
@@ -168,7 +197,26 @@ void Level::writeEndPoint(ofstream &out) {
 	out << "-1\n";
 	out << "END\n";
 	out << endPoint.left << ' ' << endPoint.top << "\n";
-	out << "-1";
+}
+
+void Level::writeStats(ofstream &out, Character::characteristics stats) {
+	out << "-1\n";
+	out << "STATS\n";
+	out << stats.HP << ' ' << stats.ATK << ' ' << stats.DEF << '\n';
+}
+
+void Level::writeInventory(ofstream& out, Cell *cells) {
+	out << "-1\n";
+	out << "INVENTORY\n";
+	for (int i = 0; i < 8; i++) {
+		if (cells[i].isEmpty) {
+			out << "0 ";
+		}
+		else {
+			out << cells[i].item->getID() << ' ';
+		}
+	}
+	out << '\n';
 }
 
 void Level::drawMap(RenderWindow& window) {
@@ -246,7 +294,7 @@ void Level::draw(RenderWindow& window) {
 	drawMap(window);
 }
 
-bool Level::worldUpdate(Player& player, Clock& clock, Vector2f viewCenter, bool& clearEventPoll) {
+bool Level::worldUpdate(Player& player, Clock& clock, Vector2f viewCenter, bool &clearEventPoll) {
 	viewCord = viewCenter;
 
 	for (int i = 0; i < enemies.size(); i++) {

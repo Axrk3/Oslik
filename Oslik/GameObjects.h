@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Animation.h"
 
 using namespace sf;
@@ -120,14 +121,15 @@ public:
 	struct characteristics {
 		int HP,
 			ATK,
-			DEF,
-			Level,
-			Exp;
+			DEF;
+	//		Level,
+	//		Exp;
 	} stats;
 public:
 	void setAnimationTexture();
 	void attack();
 	characteristics getStats();
+	void setStats(characteristics _stats);
 };
 
 class Inventory : public GameObject {
@@ -151,8 +153,13 @@ public:
 	void draw(RenderWindow &window);
 	void input(Player &player);
 	void addItem(Item &item);
+	void addItem(Item &item, int index);
 	void menuLogic(Player &player);
 	void update(Character::characteristics stats, Vector2f viewCenter);
+	void updateCells();
+	void updateBars(Character::characteristics stats);
+	void updateItemsIcons();
+	void updateButtons();
 	void clear();
 };
 
@@ -163,8 +170,8 @@ public:
 	bool onGround, running;
 	Inventory inventory;
 public:
-	Player() {}
-	void initialize(String fileName, int**& map, int blockSize, Vector2f spawnPoint);
+	Player();
+	void initialize(String fileName, int **&map);
 	void update(float time,Vector2f viewCenter);
 	void moveLeft(float time);
 	void moveRight(float time);
@@ -175,6 +182,7 @@ public:
 	void gravity(float time);
 	void collisionX();
 	void collisionY();
+	void setSpawnPoint(Vector2f spawnPoint);
 	void openInventory(RenderWindow& window, Vector2f viewCenter);
 };
 

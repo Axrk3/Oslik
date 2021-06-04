@@ -92,7 +92,7 @@ void Battle::cursorInitialization() {
 }
 
 void Battle::playerInitialization() {
-	player->sprite.setPosition(384, 540);
+	player->sprite.setPosition(resolution.x / 5, 3 * resolution.y / 8);
 }
 
 void Battle::enemyInitialization(Enemy &enemy) {
@@ -111,16 +111,16 @@ void Battle::enemyInitialization(Enemy &enemy) {
 
 void Battle::enemyCoordinatesSet() {
 	if (enemies.size() == 1) {
-		enemies.front()->sprite.setPosition(1536, 540);
+		enemies.front()->sprite.setPosition(1536, 3 * resolution.y / 8);
 	}
 	else if (enemies.size() == 2) {
-		enemies.front()->sprite.setPosition(1416, 270);
-		enemies.back()->sprite.setPosition(1656, 810);
+		enemies.front()->sprite.setPosition(1416, resolution.y / 8);
+		enemies.back()->sprite.setPosition(1656, 5 * resolution.y / 8);
 	}
 	else {
-		enemies.at(0)->sprite.setPosition(1416, 270);
-		enemies.at(1)->sprite.setPosition(1536, 540);
-		enemies.at(2)->sprite.setPosition(1656, 810);
+		enemies.at(0)->sprite.setPosition(1416, resolution.y / 8);
+		enemies.at(1)->sprite.setPosition(1536, 3 * resolution.y / 8);
+		enemies.at(2)->sprite.setPosition(1656, 5 * resolution.y / 8);
 	}
 }
 
@@ -235,6 +235,11 @@ int Battle::chooseEnemy() {
 			}
 		}
 
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+			choice = -1;
+			break;
+		}
+
 		cursorSprite.setPosition(enemies.at(choice)->sprite.getPosition().x + enemies.at(choice)->texture.getSize().x, enemies.at(choice)->sprite.getPosition().y);
 
 		draw();
@@ -252,8 +257,10 @@ void Battle::actionProcessing() {
 		switch (action.x + 2 * action.y) {
 		case 0:
 			choice = chooseEnemy();
-			attack(*player, *enemies.at(choice));
-			isAction = true;
+			if (choice > -1) {
+				attack(*player, *enemies.at(choice));
+				isAction = true;
+			}
 			break;
 		case 1:
 			defenceUp(*player);

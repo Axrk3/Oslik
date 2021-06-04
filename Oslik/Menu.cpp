@@ -113,23 +113,25 @@ MainMenu::MainMenu() {
 
 	buttonSprite.setTexture(menuTexture);
 
-	buttons = new FloatRect[2];
-	for (int i = 0; i < 2; i++) {
+	buttons = new FloatRect[3];
+	for (int i = 0; i < 3; i++) {
 		buttons[i].width = 512;
 		buttons[i].height = 144;
 	}
-
-	buttons[0].left = menuSprite.getPosition().x + 96;
-	buttons[0].top = menuSprite.getPosition().y + 144;
-	buttons[1].left = menuSprite.getPosition().x + 96;
-	buttons[1].top = menuSprite.getPosition().y + 536;
+	
+	int yDelimeter = 144;
+	for (int i = 0; i < 3; i++) {
+		buttons[i].left = menuSprite.getPosition().x + 96;
+		buttons[i].top = menuSprite.getPosition().y + yDelimeter;
+		yDelimeter += 200;
+	}
 }
 
 void MainMenu::menuInput() {
 	mousePosition.x = Mouse::getPosition().x;
 	mousePosition.y = Mouse::getPosition().y;
 
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 3; i++) {
 		if (mousePosition.x >= buttons[i].left && mousePosition.x <= buttons[i].left + buttons[i].width &&
 			mousePosition.y >= buttons[i].top && mousePosition.y <= buttons[i].top + buttons[i].height) {
 			activeButton = i;
@@ -145,15 +147,16 @@ void MainMenu::menuInput() {
 void MainMenu::menuLogic() {
 	switch (activeButton)
 	{
-	case 0: 
-		//saveMenu.invokeSaveMenu();
+	case 0:
 		choice = 1;
 		break;
 	case 1:
+		choice = 2;
+		break;
+	case 2: 
 		exit(0);
 		break;
 	}
-
 }
 
 void MainMenu::drawMenu(RenderWindow &window) {
@@ -167,8 +170,12 @@ void MainMenu::drawMenu(RenderWindow &window) {
 		buttonSprite.setPosition(buttons[0].left, buttons[0].top);
 		break;
 	case 1:
-		buttonSprite.setTextureRect(IntRect(0, 944, 512, 144));
+		buttonSprite.setTextureRect(IntRect(0, 1088, 512, 144));
 		buttonSprite.setPosition(buttons[1].left, buttons[1].top);
+		break;
+	case 2: 
+		buttonSprite.setTextureRect(IntRect(0, 944, 512, 144));
+		buttonSprite.setPosition(buttons[2].left, buttons[2].top);
 		break;
 	}
 
