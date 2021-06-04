@@ -1,6 +1,10 @@
 ﻿#include "Engine.h"
 
 Engine::Engine() {
+
+	InventoryBuffer.loadFromFile("openInventory.ogg");
+	InventorySound.setBuffer(InventoryBuffer);
+
 	resolution.x = VideoMode::getDesktopMode().width;
 	resolution.y = VideoMode::getDesktopMode().height;
 
@@ -55,6 +59,7 @@ void Engine::input(Event event, float time) {
 			player.jump();
 			break;
 		case Keyboard::I:
+			InventorySound.play();
 			inventoryIsOpen = !inventoryIsOpen;
 			window.setMouseCursorVisible(inventoryIsOpen);
 			break;
