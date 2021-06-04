@@ -25,6 +25,12 @@ void Engine::initialization() {
 }
 
 void Engine::input(Event event, float time) {
+	if (clearEventPoll) {
+		while (window.pollEvent(event));
+		clearEventPoll = false;
+		player.stopX();
+	}
+
 	if (inventoryIsOpen) {
 		player.inventory.input(player);
 	}
@@ -88,7 +94,7 @@ void Engine::drawInventory() {
 }
 
 void Engine::update(float time) {
-	lvl.worldUpdate(player, clock, view.getCenter());
+	lvl.worldUpdate(player, clock, view.getCenter(), clearEventPoll);
 	player.update(time, view.getCenter());
 	offset();
 	view.setCenter(offsetX, offsetY);
@@ -132,7 +138,6 @@ void Engine::start() {
 	while (true) {
 		time = clock.getElapsedTime().asSeconds();
 		clock.restart();
-		Event event;
 		while (window.pollEvent(event)) {
 			switch (event.type)
 			{
@@ -161,5 +166,7 @@ void Engine::closeSession() {
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
 	window.setView(view);
 	lvl.clear();
-	sleep(milliseconds(100));
+	player.inventory.clear();
+	if (inventoryIsOpen) inventoryIsOpen = false;
+	sleep(milliseconds(150));
 }

@@ -5,12 +5,13 @@ Level::Level() {
     resolution.y = VideoMode::getDesktopMode().height;
 }
 
-void Level::loadLVL(const string _fileName, Player &_player, RenderWindow &window) {
+void Level::loadLVL(const string _fileName, Player &_player, RenderWindow &_window) {
+    window = &_window;
     string line,path = "maps/";
     int x, y, num;
     fileName = _fileName;
 
-    battle.create(_player, window);
+    battle.create(_player, *window);
 
     ifstream in(_fileName);
     if (in.is_open()) {
@@ -185,7 +186,7 @@ void Level::draw(RenderWindow &window) {
     drawMap(window);
 }
 
-void Level::worldUpdate(Player &player, Clock &clock, Vector2f viewCenter) {
+bool Level::worldUpdate(Player &player, Clock &clock, Vector2f viewCenter, bool &clearEventPoll) {
     viewCord = viewCenter;
 
     for (int i = 0; i < enemies.size(); i++) {
@@ -195,6 +196,7 @@ void Level::worldUpdate(Player &player, Clock &clock, Vector2f viewCenter) {
                 battle.start(enemies.at(i));
                 enemies.erase(enemies.begin() + i);
                 clock.restart();
+                clearEventPoll = true;
             }
         }
     }
@@ -210,7 +212,7 @@ void Level::worldUpdate(Player &player, Clock &clock, Vector2f viewCenter) {
     }
 
     if (endPoint.intersects(player.hitBox)) {
-        return;
+        return 1;
     }
 }
 

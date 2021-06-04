@@ -134,6 +134,7 @@ public:
 	void addItem(Item &item);
 	void menuLogic(Player &player);
 	void update(Character::characteristics stats, Vector2f viewCenter);
+	void clear();
 };
 
 class Player : public Character {

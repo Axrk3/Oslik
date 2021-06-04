@@ -393,6 +393,12 @@ void Inventory::addItem(Item &item) {
 	}
 }
 
+void Inventory::clear() {
+	for (int i = 0; i < 8; i++) {
+		cells[i].drop();
+	}
+}
+
 void Cell::drop() {
 	delete item;
 	item = 0;

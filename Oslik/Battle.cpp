@@ -13,6 +13,7 @@ void Battle::create(Player &_player, RenderWindow &_window) {
 }
 
 void Battle::start(Enemy &enemy) {
+
 	objectsInitialization(enemy);
 	exitFlag = false;
 
@@ -36,7 +37,6 @@ void Battle::start(Enemy &enemy) {
 
 			isAction = false;
 		}
-
 		window->display();
 	}
 	enemies.clear();

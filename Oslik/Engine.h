@@ -22,6 +22,9 @@ public:
 	Clock clock;
 	GameMenu menu;
 	MainMenu mainMenu;
+	Event event;
+	bool clearEventPoll;
+
 	int offsetX, offsetY, gameMenuChoice;
 	float time;
 	bool menuIsOpen = false, inventoryIsOpen, closeGame = false;
