@@ -155,7 +155,7 @@ void Level::makeSave(const string saveFile, Player &player) {
 
 void Level::writeMap(ofstream &out) {
 	out << "LVL_NUM\n";
-	out << lvlNum;
+	out << lvlNum << '\n';
 	out << "MAP_SIZE\n";
 	out << mapSize.x << ' ' << mapSize.y << "\n";
 	out << "TILE_SIZE " << blockSize << "\n";
