@@ -192,7 +192,6 @@ int MainMenu::invokeMenu(RenderWindow &window) {
 		menuInput();
 		if (choice) {
 			return choice;
-			break;
 		}
 		drawMenu(window);
 	}

@@ -12,10 +12,10 @@ private:
 	std::vector <Enemy*> enemies;
 	
 	double hpModifier;
-	bool isAction, isBlocked, exitFlag, inventoryIsOpen;
+	bool isAction, isBlocked, exitFlag, inventoryIsOpen, isDead;
 	
-	Texture menuTexture, cursorTexture;
-	Sprite menuSprite, cursorSprite;
+	Texture menuTexture, cursorTexture, endBattleTexture;
+	Sprite menuSprite, cursorSprite, endBattleSprite;
 	Vector2f resolution, barSize, hpBarSize, currentPosition;
 	Vector2i action;
 	RectangleShape *barHitBox, hpBar;
@@ -23,7 +23,8 @@ private:
 public:
 	Battle();
 	void create(Player& _player, RenderWindow& _window);
-	void start(Enemy &enemy);
+	bool start(Enemy &enemy);
+	void endScreen();
 	void objectsInitialization(Enemy &enemy);
 	void menuInitialization();
 	void hpBarInitialization();

@@ -27,7 +27,7 @@ public:
 	vector <Item*> items;
 	vector <Friend> friends;
 	vector <Enemy> enemies;
-	int tileSetWidth, blockSize;
+	int tileSetWidth, blockSize, lvlNum;
 	int** map;
 	string tileSetName, backgroundName;
 	void calculateTile(int tileID);
@@ -55,6 +55,6 @@ public:
 public:
 	void loadLVL(const string fileName, Player &_player, RenderWindow &window);
 	void draw(RenderWindow& window);
-	bool worldUpdate(Player& player, Clock &clock, Vector2f viewCenter, bool &clearEventPoll);
+	int worldUpdate(Player& player, Clock &clock, Vector2f viewCenter, bool &clearEventPoll);
 	void clear();
 };

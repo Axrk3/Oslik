@@ -13,7 +13,13 @@ void Level::loadLVL(const string fileName, Player &player, RenderWindow &_window
 	battle.create(player, *window);
 
 	ifstream in(fileName);
+	in.seekg(0);
+
 	if (in.is_open()) {
+		getline(in, line);
+		getline(in, line);
+		lvlNum = stoi(line);
+
 		getline(in, line);
 		in >> mapSize.x; in >> mapSize.y;
 		map = new int* [mapSize.y];
@@ -26,7 +32,6 @@ void Level::loadLVL(const string fileName, Player &player, RenderWindow &_window
 		blockSize = atoi(line.substr(10).c_str());
 		tile.setSize(Vector2f(blockSize, blockSize));
 
-		// Закинуть текстуры в папку maps и приклеить к началу строки maps/
 		getline(in, line);
 		tileSetName = line.substr(line.find('"') + 1);
 		tileSet.loadFromFile(path + tileSetName);
@@ -112,7 +117,7 @@ void Level::readItem(ifstream &in) {
 
 void Level::readEndPoint(ifstream& in) {
 	in >> endPoint.left; in >> endPoint.top;
-	//in >> endPoint.width; in >> endPoint.height;
+	in >> endPoint.width; in >> endPoint.height;
 }
 
 void Level::readStats(ifstream &in, Player &player) {
@@ -149,6 +154,8 @@ void Level::makeSave(const string saveFile, Player &player) {
 }
 
 void Level::writeMap(ofstream &out) {
+	out << "LVL_NUM\n";
+	out << lvlNum;
 	out << "MAP_SIZE\n";
 	out << mapSize.x << ' ' << mapSize.y << "\n";
 	out << "TILE_SIZE " << blockSize << "\n";
@@ -196,7 +203,7 @@ void Level::writeItem(ofstream &out) {
 void Level::writeEndPoint(ofstream &out) {
 	out << "-1\n";
 	out << "END\n";
-	out << endPoint.left << ' ' << endPoint.top << "\n";
+	out << endPoint.left << ' ' << endPoint.top << ' ' << endPoint.width << ' ' << endPoint.height << "\n";
 }
 
 void Level::writeStats(ofstream &out, Character::characteristics stats) {
@@ -294,17 +301,21 @@ void Level::draw(RenderWindow& window) {
 	drawMap(window);
 }
 
-bool Level::worldUpdate(Player& player, Clock& clock, Vector2f viewCenter, bool &clearEventPoll) {
+int Level::worldUpdate(Player& player, Clock& clock, Vector2f viewCenter, bool &clearEventPoll) {
 	viewCord = viewCenter;
+	int outcome = 0;
 
 	for (int i = 0; i < enemies.size(); i++) {
 		if (enemies.at(i).getHitBox().left > viewCord.x - 960 && enemies.at(i).getHitBox().left < viewCord.x + 960 &&
 			enemies.at(i).getHitBox().top > viewCord.y - 540 && enemies.at(i).getHitBox().top < viewCord.y + 540) {
 			if (enemies.at(i).playerIntersection(player)) {
-				battle.start(enemies.at(i));
+				if (battle.start(enemies.at(i))) {
+					outcome = 1;
+				}
 				enemies.erase(enemies.begin() + i);
 				clock.restart();
 				clearEventPoll = true;
+				
 			}
 		}
 	}
@@ -320,8 +331,10 @@ bool Level::worldUpdate(Player& player, Clock& clock, Vector2f viewCenter, bool 
 	}
 
 	if (endPoint.intersects(player.hitBox)) {
-		return 1;
+		outcome = 2;
 	}
+
+	return outcome;
 }
 
 void Level::clear() {

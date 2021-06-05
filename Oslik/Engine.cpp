@@ -11,12 +11,12 @@ Engine::Engine() {
 	view.reset(FloatRect(0, 0, resolution.x, resolution.y));
 }
 
-void Engine::initialization() {
+void Engine::initialization(String fileName) {
 	window.setMouseCursorVisible(false);
 	offsetX = resolution.x / 2;
 	offsetY = resolution.y / 2;
 	//Переместить в другое место
-	lvl.loadLVL(std::string("maps/lvl.txt"), player, window);
+	lvl.loadLVL(std::string(fileName), player, window);
 	player.initialize("run.png", lvl.map);
 	//offset();
 	//view.reset(FloatRect(offsetX - resolution.x / 2, offsetY - resolution.y / 2, resolution.x, resolution.y));
@@ -101,7 +101,7 @@ void Engine::drawInventory() {
 }
 
 void Engine::update(float time) {
-	lvl.worldUpdate(player, clock, view.getCenter(), clearEventPoll);
+	outcome = lvl.worldUpdate(player, clock, view.getCenter(), clearEventPoll);
 	player.update(time, view.getCenter());
 	offset();
 	view.setCenter(offsetX, offsetY);
@@ -109,12 +109,16 @@ void Engine::update(float time) {
 }
 
 void Engine::offset() {
-	if ((player.hitBox.left > resolution.x / 2) && (player.hitBox.left < lvl.mapSize.x * lvl.blockSize - resolution.x / 2)) {
+	if ((player.getHitBox().left > resolution.x / 2) && (player.getHitBox().left < lvl.mapSize.x * lvl.blockSize - resolution.x / 2)) {
 		offsetX = player.hitBox.left;
+	} else {
+		offsetX = player.getHitBox().left < resolution.x / 2 ? resolution.x / 2 : lvl.mapSize.x * lvl.blockSize - resolution.x / 2;
 	}
 
-	if ((player.hitBox.top > resolution.y / 2) && (player.hitBox.top < lvl.mapSize.y * lvl.blockSize - resolution.y / 2)) {
+	if ((player.getHitBox().top > resolution.y / 2) && (player.getHitBox().top < lvl.mapSize.y * lvl.blockSize - resolution.y / 2)) {
 		offsetY = player.hitBox.top;
+	} else {
+		offsetY = player.getHitBox().top < resolution.y / 2 ? resolution.y / 2 : lvl.mapSize.y * lvl.blockSize - resolution.y / 2;
 	}
 }
 
@@ -140,8 +144,8 @@ int Engine::invokeGameMenu() {
 	return gameMenuChoice;
 }
 
-void Engine::start() {
-	initialization();
+void Engine::start(String fileName) {
+	initialization(fileName);
 	while (true) {
 		time = clock.getElapsedTime().asSeconds();
 		clock.restart();
@@ -159,9 +163,22 @@ void Engine::start() {
 		}
 		if (invokeGameMenu() == 0) break;
 		update(time);
+		if (outcome == 1) {
+			break;
+		}
+		if (outcome == 2) {
+			outcomeProcessing();
+		}
 		draw();
 	}
 	closeSession();
+}
+
+void Engine::outcomeProcessing() {
+	lvl.clear();
+	int lvlNum = lvl.lvlNum + 1;
+	std::string lvlName = "maps/lvl" + std::to_string(lvlNum) + ".txt";
+	lvl.loadLVL(lvlName, player, window);
 }
 
 int Engine::startMainMenu() {

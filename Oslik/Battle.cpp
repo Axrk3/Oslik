@@ -12,10 +12,9 @@ void Battle::create(Player &_player, RenderWindow &_window) {
 	window = &_window;
 }
 
-void Battle::start(Enemy &enemy) {
+bool Battle::start(Enemy &enemy) {
 
 	objectsInitialization(enemy);
-	exitFlag = false;
 
 	while (player->getStats().HP > 0 && !enemies.empty() && !exitFlag) {
 		draw();
@@ -27,7 +26,9 @@ void Battle::start(Enemy &enemy) {
 
 		if (isAction) {
 			for (int i = 0; i < enemies.size(); i++) {
-				attack(*enemies.at(i), *player);
+				if (player->getStats().HP) {
+					attack(*enemies.at(i), *player);
+				}
 			}
 
 			if (isBlocked) {
@@ -39,7 +40,28 @@ void Battle::start(Enemy &enemy) {
 		}
 		window->display();
 	}
+	if (!player->getStats().HP) {
+		isDead = true;
+	}
+	endScreen();
 	enemies.clear();
+	return isDead;
+}
+
+void Battle::endScreen() {
+	if (isDead) {
+		endBattleTexture.loadFromFile("dead.png");
+		window->clear(Color::Black);
+	}
+	else {
+		endBattleTexture.loadFromFile("win.png");
+		window->clear(Color::White);
+	}
+	endBattleSprite.setTexture(endBattleTexture);
+	endBattleSprite.setPosition((resolution.x - endBattleTexture.getSize().x) / 2, (resolution.y - endBattleTexture.getSize().y) / 2);
+	window->draw(endBattleSprite);
+	window->display();
+	while (!Keyboard::isKeyPressed(Keyboard::Escape));
 }
 
 void Battle::objectsInitialization(Enemy &enemy) {
@@ -48,6 +70,8 @@ void Battle::objectsInitialization(Enemy &enemy) {
 	cursorInitialization();
 	playerInitialization();
 	enemyInitialization(enemy);
+	exitFlag = false;
+	isDead = false;
 }
 
 void Battle::menuInitialization() {

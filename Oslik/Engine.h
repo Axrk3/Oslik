@@ -11,7 +11,7 @@
 using namespace sf;
 
 class Engine {
-public:
+private:
 	RenderWindow window;
 	Vector2f resolution;
 	Sprite backgroundSprite;
@@ -27,10 +27,10 @@ public:
 	Sound sound;
 	bool clearEventPoll;
 
-	int offsetX, offsetY, gameMenuChoice;
+	int offsetX, offsetY, gameMenuChoice, outcome;
 	float time;
 	bool menuIsOpen = false, inventoryIsOpen, closeGame = false;
-	void initialization();
+	void initialization(String fileName);
 	void input(Event event, float time);
 	void draw();
 	void update(float time);
@@ -40,9 +40,10 @@ public:
 	void closeSession();
 	void drawInventory();
 	void makeSave();
+	void outcomeProcessing();
 public:
 	Engine();
-	void start();
+	void start(String fileName);
 	int startMainMenu();
 };
 
