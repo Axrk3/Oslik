@@ -18,11 +18,6 @@ void Engine::initialization(String fileName) {
 	//Переместить в другое место
 	lvl.loadLVL(std::string(fileName), player, window);
 	player.initialize("run.png", lvl.map);
-	//offset();
-	//view.reset(FloatRect(offsetX - resolution.x / 2, offsetY - resolution.y / 2, resolution.x, resolution.y));
-	//view.setCenter(offsetX, offsetY);
-	//window.setView(view);
-	//
 	update(0);
 	draw();
 	sleep(milliseconds(200));
@@ -179,6 +174,7 @@ void Engine::outcomeProcessing() {
 	int lvlNum = lvl.lvlNum + 1;
 	std::string lvlName = "maps/lvl" + std::to_string(lvlNum) + ".txt";
 	lvl.loadLVL(lvlName, player, window);
+	clock.restart();
 }
 
 int Engine::startMainMenu() {

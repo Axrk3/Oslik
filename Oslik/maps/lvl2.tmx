@@ -36,7 +36,7 @@
 </data>
  </layer>
  <objectgroup id="6" name="SPAWN POINT">
-  <object id="18" gid="105" x="198.243" y="1705.69" width="64" height="64"/>
+  <object id="18" gid="105" x="251.416" y="1067.61" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="7" name="FRIEND">
   <object id="27" x="-33.8788" y="-11.2121">
