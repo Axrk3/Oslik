@@ -202,6 +202,10 @@ int Item::getID() {
 	return id;
 }
 
+int Item::getCoefficient() {
+	return coefficient;
+}
+
 void HealthPotion::use(Player &player) {
 	if (player.stats.HP + coefficient > 100) {
 		player.stats.HP = 100;
@@ -211,7 +215,7 @@ void HealthPotion::use(Player &player) {
 	}
 }
 
-void StrengthPotion::use(Player& player) {
+void StrengthPotion::use(Player &player) {
 	if (player.stats.ATK + coefficient > 50) {
 		player.stats.ATK = 50;
 	}
@@ -229,16 +233,16 @@ void ResistancePotion::use(Player &player) {
 	}
 }
 
-void Helmet::use(Player& player) {
-
+void Helmet::use(Player &player) {
+	player.stats.DEF += coefficient;
 }
 
-void Saddle::use(Player& player) {
-
+void Saddle::use(Player &player) {
+	player.stats.DEF += coefficient;
 }
 
-void Horseshoe::use(Player& player) {
-
+void Horseshoe::use(Player &player) {
+	player.stats.DEF += coefficient;
 }
 
 Inventory::Inventory() {
@@ -313,6 +317,7 @@ void Inventory::input(Player &player) {
 			mousePosition.y >= equipmentCells[i].hitBox.top && mousePosition.y <= equipmentCells[i].hitBox.top + equipmentCells[i].hitBox.height &&
 			activeButton == -1) {
 			if (Mouse::isButtonPressed(Mouse::Button::Left) && !equipmentCells[i].isEmpty) {
+
 				isClicked = true;
 				openedEquipmentCell = i;
 				break;
@@ -354,20 +359,20 @@ void Inventory::menuLogic(Player &player) {
 		break;
 	case 1:
 		if (openedCell > -1) {
-			cells[openedCell].item->use(player);
-			cells[openedCell].drop();
-		}
-		if (openedEquipmentCell > -1) {
-			addItem(*equipmentCells[openedEquipmentCell].item);
-			equipmentCells[openedEquipmentCell].drop();
+			if (cells[openedCell].item->getID() < 4) {
+				equipItem();
+				cells[openedCell].item->use(player);
+				cells[openedCell].isEmpty = true;
+			}
+			else {
+				cells[openedCell].item->use(player);
+				cells[openedCell].drop();
+			}
 		}
 		break;
 	case 2:
 		if (openedCell > -1) {
 			cells[openedCell].drop();
-		}
-		if (openedEquipmentCell > -1) {
-			cells[openedEquipmentCell].drop();
 		}
 		break;
 	}
@@ -383,6 +388,12 @@ void Inventory::draw(RenderWindow &window) {
 	for (int i = 0; i < 8; i++) {
 		if (!cells[i].isEmpty) {
 			window.draw(cells[i].item->getSprite());
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		if (!equipmentCells[i].isEmpty) {
+			window.draw(equipmentCells[i].item->getSprite());
 		}
 	}
 
@@ -405,6 +416,7 @@ void Inventory::update(Character::characteristics stats, Vector2f viewCenter) {
 	text.setPosition(sprite.getPosition().x + 285, sprite.getPosition().y + 365);
 
 	updateBars(stats);
+	updateEquipmentCells();
 	updateItemsIcons();
 	updateButtons();
 	updateCells();
@@ -445,6 +457,12 @@ void Inventory::updateItemsIcons() {
 	for (int i = 0; i < 8; i++) {
 		if (!cells[i].isEmpty) {
 			cells[i].item->sprite.setPosition(cells[i].hitBox.left, cells[i].hitBox.top);
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		if (!equipmentCells[i].isEmpty) {
+			equipmentCells[i].item->sprite.setPosition(equipmentCells[i].hitBox.left, equipmentCells[i].hitBox.top);
 		}
 	}
 }
@@ -496,10 +514,22 @@ void Inventory::addItem(Item &item, int index) {
 	cells[index].isEmpty = false;
 }
 
+void Inventory::equipItem() {
+	int id = cells[openedCell].item->getID() - 1;
+	if (equipmentCells[id].isEmpty) {
+		equipmentCells[id].item = cells[openedCell].item;
+		equipmentCells[id].isEmpty = false;
+	}
+}
+
 void Inventory::clear() {
 	for (int i = 0; i < 8; i++) {
 		cells[i].drop();
 	}
+
+	/*for (int i = 0; i < 3; i++) {
+		equipmentCells[i].drop();
+	}*/
 }
 
 void Cell::drop() {

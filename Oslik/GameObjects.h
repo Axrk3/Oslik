@@ -32,6 +32,7 @@ public:
 	virtual void use(Player &player) {};
 	virtual String examine();
 	virtual int getID();
+	virtual int getCoefficient();
 
 	Sprite getSpriteInInventory();
 };
@@ -149,6 +150,7 @@ public:
 	void input(Player &player);
 	void addItem(Item &item);
 	void addItem(Item &item, int index);
+	void equipItem();
 	void menuLogic(Player &player);
 	void update(Character::characteristics stats, Vector2f viewCenter);
 	void updateCells();
