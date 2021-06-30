@@ -39,7 +39,6 @@ public:
 class Equipment : public Item {
 public:
 	Equipment(String _name, int _coefficient) : Item(_name, _coefficient) {};
-	//virtual void putOn();
 };
 
 class Helmet : public Equipment {
@@ -48,7 +47,7 @@ public:
 		discription = "Gives 3 points of armor while equiped."; 
 		id = _id;
 	};
-	void putOn();
+	void use(Player& player);
 };
 
 class Saddle : public Equipment {
@@ -57,7 +56,7 @@ public:
 		discription = "Gives 5 points of armor while equiped."; 
 		id = _id;
 	};
-	void putOn();
+	void use(Player& player);
 };
 
 class Horseshoe : public Equipment {
@@ -66,13 +65,12 @@ public:
 		discription = "Gives 2 points of armor while equiped.";
 		id = _id;
 	};
-	void putOn();
+	void use(Player& player);
 };
 
 class Consumable : public Item {
 public:
 	Consumable(String _name, int _coefficient) : Item(_name, _coefficient) {};
-	//virtual void consume();
 };
 
 class HealthPotion : public Consumable {
@@ -105,12 +103,10 @@ public:
 };
 
 class Cell {
-	//Заприватить и сдружить с инвентарём
 public:
 	FloatRect hitBox;
 	Item *item;
 	bool isEmpty;
-	int count = 0;
 
 	void drop();
 };
@@ -122,8 +118,6 @@ public:
 		int HP,
 			ATK,
 			DEF;
-	//		Level,
-	//		Exp;
 	} stats;
 public:
 	void setAnimationTexture();
@@ -135,11 +129,12 @@ public:
 class Inventory : public GameObject {
 public:
 	Cell cells[8];
+	Cell equipmentCells[3];
 
 	RectangleShape inventoryBars[3];
 	FloatRect buttons[3];
 	Vector2f mousePosition;
-	int quantityConsum, quantityEquip, openedCell, activeButton;
+	int quantityConsum, quantityEquip, openedCell, openedEquipmentCell, activeButton;
 	
 
 	Texture menuTexture;
@@ -157,6 +152,7 @@ public:
 	void menuLogic(Player &player);
 	void update(Character::characteristics stats, Vector2f viewCenter);
 	void updateCells();
+	void updateEquipmentCells();
 	void updateBars(Character::characteristics stats);
 	void updateItemsIcons();
 	void updateButtons();

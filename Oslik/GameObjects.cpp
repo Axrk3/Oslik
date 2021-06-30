@@ -229,6 +229,18 @@ void ResistancePotion::use(Player &player) {
 	}
 }
 
+void Helmet::use(Player& player) {
+
+}
+
+void Saddle::use(Player& player) {
+
+}
+
+void Horseshoe::use(Player& player) {
+
+}
+
 Inventory::Inventory() {
 	quantityConsum = 0, quantityEquip = 0;
 
@@ -258,6 +270,12 @@ Inventory::Inventory() {
 		cells[i].isEmpty = true;
 	}
 
+	for (int i = 0; i < 3; i++) {
+		equipmentCells[i].hitBox.width = 67;
+		equipmentCells[i].hitBox.height = 67;
+		equipmentCells[i].isEmpty = true;
+	}
+
 	font.loadFromFile("times.ttf");
 	text.setFont(font);
 	text.setCharacterSize(28);
@@ -283,6 +301,28 @@ void Inventory::input(Player &player) {
 				break;
 			}
 		}
+		else {
+			if (Mouse::isButtonPressed(Mouse::Button::Left) && activeButton == -1) {
+				openedCell = -1;
+			}
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		if (mousePosition.x >= equipmentCells[i].hitBox.left && mousePosition.x <= equipmentCells[i].hitBox.left + equipmentCells[i].hitBox.width &&
+			mousePosition.y >= equipmentCells[i].hitBox.top && mousePosition.y <= equipmentCells[i].hitBox.top + equipmentCells[i].hitBox.height &&
+			activeButton == -1) {
+			if (Mouse::isButtonPressed(Mouse::Button::Left) && !equipmentCells[i].isEmpty) {
+				isClicked = true;
+				openedEquipmentCell = i;
+				break;
+			}
+		}
+		else {
+			if (Mouse::isButtonPressed(Mouse::Button::Left) && activeButton == -1) {
+				openedEquipmentCell = -1;
+			}
+		}
 	}
 
 	for (int i = 0; i < 3; i++) {
@@ -304,15 +344,31 @@ void Inventory::menuLogic(Player &player) {
 	switch (activeButton)
 	{
 	case 0:
-		text.setString(cells[openedCell].item->examine());
-		isExamine = true;
+		if (openedCell > -1) {
+			text.setString(cells[openedCell].item->examine());
+			isExamine = true;
+		}
+		if (openedEquipmentCell > -1) {
+			text.setString(equipmentCells[openedEquipmentCell].item->examine());
+		}
 		break;
 	case 1:
-		cells[openedCell].item->use(player);
-		cells[openedCell].drop();
+		if (openedCell > -1) {
+			cells[openedCell].item->use(player);
+			cells[openedCell].drop();
+		}
+		if (openedEquipmentCell > -1) {
+			addItem(*equipmentCells[openedEquipmentCell].item);
+			equipmentCells[openedEquipmentCell].drop();
+		}
 		break;
 	case 2:
-		cells[openedCell].drop();
+		if (openedCell > -1) {
+			cells[openedCell].drop();
+		}
+		if (openedEquipmentCell > -1) {
+			cells[openedEquipmentCell].drop();
+		}
 		break;
 	}
 }
@@ -345,17 +401,13 @@ void Inventory::draw(RenderWindow &window) {
 
 void Inventory::update(Character::characteristics stats, Vector2f viewCenter) {
 	sprite.setPosition(viewCenter.x - 480, viewCenter.y - 270);
-
-	updateCells();
-
-	updateBars(stats);
-
 	menuSprite.setPosition(cells[openedCell].hitBox.left + cells[openedCell].hitBox.width, cells[openedCell].hitBox.top);
 	text.setPosition(sprite.getPosition().x + 285, sprite.getPosition().y + 365);
 
+	updateBars(stats);
 	updateItemsIcons();
-
 	updateButtons();
+	updateCells();
 }
 
 void Inventory::updateCells() {
@@ -366,6 +418,15 @@ void Inventory::updateCells() {
 		cells[i].hitBox.top = cells[i + 1].hitBox.top = sprite.getPosition().y + yDelimeter;
 		yDelimeter += 96;
 	}
+}
+
+void Inventory::updateEquipmentCells() {
+	equipmentCells[0].hitBox.left = sprite.getPosition().x + 568;
+	equipmentCells[0].hitBox.top = sprite.getPosition().y + 86;
+	equipmentCells[1].hitBox.left = sprite.getPosition().x + 413;
+	equipmentCells[1].hitBox.top = sprite.getPosition().y + 91;
+	equipmentCells[2].hitBox.left = sprite.getPosition().x + 476;
+	equipmentCells[2].hitBox.top = sprite.getPosition().y + 229;
 }
 
 void Inventory::updateBars(Character::characteristics stats) {
